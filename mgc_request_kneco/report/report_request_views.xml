@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="report_request_form_view" model="ir.ui.view">
+            <field name="name">account.request.report.handler.form</field>
+            <field name="model">account.request.report.handler</field>
+            <field name="arch" type="xml">
+                <form string="Request Report">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="start_date"/>
+                                <field name="company_id" options="{'no_create':True}"/>
+                                <field name="department_id" options="{'no_create':True}" domain="[('company_id', '=', company_id)]"/>
+                                <field name="request_type_id" options="{'no_create':True}"
+                                       domain="[('request_company_id.company_id', '=', company_id), ('request_company_id.department_id', '=', department_id)]"/>
+                                <field name="request_type_line_id" options="{'no_create':True}" domain="[('request_type_id', '=', request_type_id)]"/>
+                                <field name="employee_id" options="{'no_create':True}" attrs="{'invisible':[('filters', '!=', 'employee')]}"
+                                       domain="[('department_id', '=', department_id)]"/>
+                                <field name="source_id" options="{'no_create':True}" attrs="{'invisible':[('filters', '!=', 'source')]}"/>
+                            </group>
+                            <group>
+                                <field name="end_date"/>
+                                <field name="filters"/>
+                                <field name="state"/>
+                                <field name="responsible_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <footer>
+                            <button name="print_request_report"
+                                    string="Print"
+                                    type="object"
+                                    class="btn-primary"/>
+
+                            <button string="Cancel"
+                                    special="cancel"
+                                    class="btn-default"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="report_request_action_view" model="ir.actions.act_window">
+            <field name="name">Request Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.request.report.handler</field>
+            <field name="view_mode">form</field>
+            <field name="view_type">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="report_request_document">
+            <t t-call="report.external_layout">
+                <t t-set="o" t-value="o.with_context({'lang':o.company_id.partner_id.lang})" />
+                <div class="page">
+                    <t t-set="company_ids" t-value="[]"/>
+                    <t t-foreach="records.sorted(key=lambda r: r.company_id.name)" t-as="recs">
+                        <t t-set="company_ids" t-value="company_ids+[recs.company_id]"/>
+                    </t>
+                    <t t-foreach="set(company_ids)" t-as="company">
+                        <t t-set="department_ids" t-value="[]"/>
+                        <t t-foreach="records.sorted(key=lambda r: r.department_id.name)" t-as="recs">
+                            <t t-set="department_ids" t-value="department_ids+[recs.department_id]"/>
+                        </t>
+                        <t t-foreach="set(department_ids)" t-as="department">
+                            <t t-if="department.company_id.id == company.id">
+                                <div style="page-break-before:always;">
+                                    <div class="text-left">
+                                        <span style="font-weight:bold;font-family:Liberation Sans;font-size:16px;">
+                                            BRANCH / DEPARTMENT: <span t-esc="department.name"/>
+                                        </span><br/>
+                                        <span style="font-weight:bold;font-family:Liberation Sans;font-size:16px;">REQUEST REPORT</span><br/>
+                                        <t t-if="o.start_date and o.end_date">
+                                            <span style="font-weight:bold;font-family:Liberation Sans;font-size:10px;">AS OF<br/></span>
+                                            <t t-esc="time.strftime('%B %d, %Y', time.strptime(o.start_date,'%Y-%m-%d'))"/> - <t t-esc="time.strftime('%B %d, %Y', time.strptime(o.end_date,'%Y-%m-%d'))"/><br/>
+                                        </t>
+                                        <span  style="font-weight:bold;font-family:Liberation Sans;font-size:12px;text-align:center;">Date: <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%B %d, %Y %H:%M:%S')"/></span><br/>
+                                    </div><br/>
+                                    <t t-set="request_type_ids" t-value="[]"/>
+                                    <t t-foreach="records.sorted(key=lambda r: r.request_type_id.id)" t-as="recs">
+                                        <t t-set="request_type_ids" t-value="request_type_ids+[recs.request_type_id]"/>
+                                    </t>
+                                    <t t-foreach="set(request_type_ids)" t-as="request_type">
+                                        <t t-if="request_type.request_department_id.department_id.id == department.id">
+                                            <span style="font-weight:bold;font-family:Liberation Sans;font-size:14px;" class="text-uppercase" t-esc="request_type.name"/><br/>
+                                            <table style="width:100%;text-align:center;font-family:Liberation Sans;border: 1px solid #000000;border-collapse: collapse;">
+                                                <tr  style="font-size:12;font-weight:bold;background-color:#d6d8db;text-align:center;border: 1px solid #000000;">
+                                                    <th style="width:2%;padding:8px;text-align:center;vertical-align:center;">NO</th>
+                                                    <th style="width:10%;padding:8px;text-align:center;vertical-align:center;">REQUEST NUMBER</th>
+                                                    <th style="width:18%;padding:8px;text-align:center;vertical-align:center;">REQUESTOR</th>
+                                                    <th style="width:10%;padding:8px;text-align:center;vertical-align:center;">REQUEST NAME</th>
+                                                    <th style="width:10%;padding:8px;text-align:center;vertical-align:center;">SOURCE</th>
+                                                    <th style="width:10%;padding:8px;text-align:center;vertical-align:center;">RQT COMPANY</th>
+                                                    <th style="width:10%;padding:8px;text-align:center;vertical-align:center;">RQT BRANCH / DEPARTMENT</th>
+                                                    <th style="width:10%;padding:8px;text-align:center;vertical-align:center;">TOTAL AMOUNT</th>
+                                                    <th style="width:10%;padding:8px;text-align:center;vertical-align:center;">STATUS</th>
+                                                </tr>
+                                                <t t-set="i" t-value="1"/>
+                                                <t t-foreach="records.sorted(key=lambda r: r.id)" t-as="rec">
+                                                    <t t-if="rec.request_type_id.id == request_type.id and rec.department_id.id == department.id">
+                                                        <tbody>
+                                                            <tr style="font-size:12px;">
+                                                                <td style="width:2%;padding:8px;text-align:center;vertical-align:center;">
+                                                                    <span t-esc="i"/>
+                                                                    <t t-set="i" t-value="i+1"/>
+                                                                </td>
+                                                                <td style="width:10%;padding:8px;text-align:center;vertical-align:center;">
+                                                                    <span t-esc="rec.request_number"/>
+                                                                </td>
+                                                                <td style="width:18%;padding:8px;text-align:center;vertical-align:center;">
+                                                                    <span class="text-uppercase" t-esc="rec.employee_id.name"/>
+                                                                </td>
+                                                                <td style="width:10%;padding:8px;text-align:center;vertical-align:center;">
+                                                                    <span class="text-uppercase" t-esc="rec.request_type_line_id.name"/>
+                                                                </td>
+                                                                <td style="width:10%;padding:8px;text-align:center;vertical-align:center;">
+                                                                    <span class="text-uppercase" t-esc="rec.source_id.name"/>
+                                                                </td>
+                                                                <td style="width:10%;padding:8px;text-align:center;vertical-align:center;">
+                                                                    <span class="text-uppercase" t-esc="rec.request_company_id.name"/>
+                                                                </td>
+                                                                <td style="width:10%;padding:8px;text-align:center;vertical-align:center;">
+                                                                    <span class="text-uppercase" t-esc="rec.request_department_id.name"/>
+                                                                </td>
+                                                                <td style="width:10%;padding:8px;text-align:center;vertical-align:center;">
+                                                                    <span class="text-uppercase" t-esc="rec.amount_total" t-options='{"widget": "monetary", "display_currency": rec.currency_id}'/>
+                                                                </td>
+                                                                <td style="width:10%;padding:8px;text-align:center;vertical-align:center;">
+                                                                    <span class="text-uppercase" t-esc="rec.state"/>
+                                                                </td>
+                                                            </tr>
+                                                            <tr style="font-size:12px;background-color:#d6d8db;text-align:center;border: 1px solid #000000;border-collapse: collapse;" class="table table-bordered">
+                                                                <td style="width:10%;padding:8px;text-align:center;vertical-align:center;font-weight:bold;" colspan="7">
+                                                                    <span>TOTAL ITEMS</span>
+                                                                </td>
+                                                                <td style="width:10%;padding:8px;text-align:center;vertical-align:center;font-weight:bold;">
+                                                                    <t t-set="total_items" t-value="0"/>
+                                                                    <t t-set="total_items" t-value="sum([rec.amount_total for rec in records if rec.request_type_id.id == request_type.id and rec.department_id.id == department.id])"/>
+                                                                    <span t-esc="o.currency_id.symbol"/> <span t-esc="'{0:,.2f}'.format((total_items))"/>
+                                                                </td>
+                                                                <td style="width:10%;padding:8px;text-align:center;vertical-align:center;font-weight:bold;">
+                                                                    <span> </span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </t>
+                                                </t>
+                                            </table>
+                                        </t>
+                                    </t>
+                                </div>
+                            </t>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_request_template">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="mgc_request.report_request_document" t-lang="o.company_id.lang"/>
+                </t>
+            </t>
+        </template>
+
+
+    </data>
+</odoo>
