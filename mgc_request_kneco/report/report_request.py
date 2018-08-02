@@ -51,11 +51,11 @@ class AccountRequestReportHandler(models.TransientModel):
         return self._print_report(data)
 
     def _print_report(self, data):
-        return self.env['report'].sudo().get_action(self, 'mgc_request_kneco.report_request_template', data=data)
+        return self.env['report'].sudo().get_action(self, 'mgc_request.report_request_template', data=data)
 
 
 class AccountRequestReport(models.AbstractModel):
-    _name = 'report.mgc_request_kneco.report_request_template'
+    _name = 'report.mgc_request.report_request_template'
 
     @api.multi
     def render_html(self, docids, data):
@@ -222,5 +222,5 @@ class AccountRequestReport(models.AbstractModel):
 
         }
 
-        return self.env['report'].render('mgc_request_kneco.report_request_template', docargs)
+        return self.env['report'].render('mgc_request.report_request_template', docargs)
 

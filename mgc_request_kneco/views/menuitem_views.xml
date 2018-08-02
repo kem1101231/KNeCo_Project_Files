@@ -9,7 +9,7 @@
 
         <!-- Request Management -->
         <menuitem id="account_request_management_parent"
-                  name="Requests" parent="mgc_request_kneco.account_request_management_root" sequence="1"
+                  name="Requests" parent="mgc_request.account_request_management_root" sequence="1"
                   groups="mgc_request.group_request_employee,mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
 
         <menuitem id="menu_my_request"
@@ -33,7 +33,7 @@
                   <!--name="Request to Approve" parent="account_request_to_approve_menu"-->
                   <!--action="account_request_to_approve_action_view"-->
                   <!--sequence="1"-->
-                  <!--groups="mgc_request_kneco.group_request_supervisor,mgc_request_kneco.group_request_manager"/>-->
+                  <!--groups="mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>-->
 
         <!--Cash-->
         <menuitem id="account_request_to_approves_cash_menu"

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "MGC Requests",
+    'name': "MGC Requests KNeCo",
 
     'summary': """
         MGC Requests""",
