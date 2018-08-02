@@ -9,7 +9,7 @@
 
         <!-- Request Management -->
         <menuitem id="account_request_management_parent"
-                  name="Requests_KNeco" parent="mgc_request_kneco.account_request_management_root" sequence="1"
+                  name="Requests" parent="mgc_request_kneco.account_request_management_root" sequence="1"
                   groups="mgc_request.group_request_employee,mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
 
         <menuitem id="menu_my_request"
