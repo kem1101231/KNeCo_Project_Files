@@ -3,7 +3,7 @@
     'name': "MGC Requests KNeCo",
 
     'summary': """
-        MGC Requests""",
+        MGC Requests - KNeCo Test""",
 
     'description': """
         A Request for the needs of the company

@@ -1,0 +1,12 @@
+<odoo>
+    <data>
+
+        <record>
+
+        </record>
+        <menuitem id="parent_root"
+                  name="Test_KNeCo"
+
+                  />
+    </data>
+</odoo>

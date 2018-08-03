@@ -55,7 +55,7 @@
                         <group>
                             <group>
                                 <separator string="Requestor" colspan="2"/>
-                                <field name="curre_user" options="{'no_create':True}"/>
+                                <field name="curre_user"/>
                                 <field name="company_id" attrs="{'readonly':[('state', 'not in',['draft', 'print_rf', 'void'])]}" options="{'no_create':True}"/>
                                 <field name="department_id" attrs="{'readonly':[('state', 'not in',['draft', 'print_rf', 'void'])]}" options="{'no_create':True}"
                                        domain="[('company_id', '=', company_id)]"/>
