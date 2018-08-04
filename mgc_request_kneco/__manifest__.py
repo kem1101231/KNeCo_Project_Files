@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "MGC Requests KNeCo",
+    'name': "MGC-Request KNeCo-Draft",
 
     'summary': """
         MGC Requests - KNeCo Test""",
@@ -9,7 +9,7 @@
         A Request for the needs of the company
     """,
 
-    'author': "MSG-MIS",
+    'author': "MSG-MIS KNeCo",
     'website': "http://www.mutigroup.com",
 
     # Categories can be used to filter modules in modules listing
