@@ -3,7 +3,7 @@
 
         <record id="root" model="ir.actions.act_window">
         <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.request</field>
+            <field name="res_model">mgc_request.base</field>
             <field name="view_mode">tree,form,kanban</field>
             <tree>
 
@@ -16,8 +16,24 @@
 
         </record>
 
-        <menuitem id="parent_root"
-                  name="Test_KNeCo"
-        action="root"/>
+        <menuitem id="mgc_request_form_root"
+                  name="MGC Request"
+                  web_icon="mgc_request_form_dev_1,static/description/icon.png"
+                  groups="base.group_user"/>
+
+        <menuitem id="mgc_request_form_parent"
+                  name="Requests" parent="mgc_request_kneco.account_request_management_root" sequence="1"
+                  groups="mgc_request.group_request_employee,mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
+
+        <menuitem id="mgc_request_form_menu_my_request"
+                  name="My Requests" parent="account_request_management_parent"
+                  action="account_request_action_view" sequence="1"
+                  groups="mgc_request_kneco.group_request_employee"/>
+
+        <menuitem id="menu_department_request"
+                  name="Other Requests" parent="account_request_management_parent"
+                  action="account_request_department_action_view" sequence="2"
+                  groups="mgc_request_kneco.group_request_employee,mgc_request.group_request_supervisor"/>
+
     </data>
 </odoo>
