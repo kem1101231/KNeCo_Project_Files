@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mgc_request_form_dev_1_mgc_request_form_dev_1,mgc_request_form_dev_1.mgc_request_form_dev_1,model_mgc_request_form_dev_1_mgc_request_form_dev_1,,1,0,0,0
