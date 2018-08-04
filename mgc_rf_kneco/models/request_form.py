@@ -22,18 +22,29 @@ class Request_Form(models.Model):
     l4_approve_status = None # level 4 approval status of the request (if there's any)
     l4_approve_date = None  # date of level 4 approval status of the request (if there's any)
 
-class Request_Types(model.Models)
+class Request_Types(models.Model):
     _name = 'mgc_request.types'
 
     name = None
     out_request = None
     transaction_type = None
+    l1_approval_reference = None
+    l1_approval_reference_data = None
+    l2_approval_reference  = None
+    l2_approval_reference_data = None
+    l3_approval_reference  = None
+    l3_approval_reference_data = None
+    l4_approval_reference  = None
+    l4_approval_reference_data = None
+
+
+class Request_Conduct_Types(models.Model):
+    _name = 'mgc.request.conduct_types'
+
+    name = None
     l1_position_approval = None
     l2_position_approval = None
     l3_position_approval = None
     l4_position_approval = None
-
-
-
 
 
