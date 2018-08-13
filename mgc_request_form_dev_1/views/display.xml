@@ -1,20 +1,20 @@
 <odoo>
     <data>
 
-        <record id="root" model="ir.actions.act_window">
-        <field name="type">ir.actions.act_window</field>
+        <record id="account_request_action_view" model="ir.actions.act_window">
+            <field name="name">Requests</field>
+            <field name="type">ir.actions.act_window</field>
             <field name="res_model">mgc_request.base</field>
             <field name="view_mode">tree,form,kanban</field>
-            <tree>
-
-            <field name="name"></field>
-            <field name="curre_user"></field>
-
-
-            </tree>
-
-
+            <field name="view_type">form</field>
+            <!--<field name="domain">[('employee_id.user_id','=',uid)]</field>-->
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Make your own request!
+              </p>
+            </field>
         </record>
+
 
         <menuitem id="mgc_request_form_root"
                   name="MGC Request"
@@ -22,18 +22,13 @@
                   groups="base.group_user"/>
 
         <menuitem id="mgc_request_form_parent"
-                  name="Requests" parent="mgc_request_kneco.account_request_management_root" sequence="1"
+                  name="Requests" parent="mgc_request_form_dev_1.mgc_request_form_root" sequence="1"
                   groups="mgc_request.group_request_employee,mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
 
         <menuitem id="mgc_request_form_menu_my_request"
-                  name="My Requests" parent="account_request_management_parent"
+                  name="My Requests" parent="mgc_request_form_dev_1.mgc_request_form_parent"
                   action="account_request_action_view" sequence="1"
-                  groups="mgc_request_kneco.group_request_employee"/>
-
-        <menuitem id="menu_department_request"
-                  name="Other Requests" parent="account_request_management_parent"
-                  action="account_request_department_action_view" sequence="2"
-                  groups="mgc_request_kneco.group_request_employee,mgc_request.group_request_supervisor"/>
+                  groups="mgc_request.group_request_employee"/>
 
     </data>
 </odoo>
