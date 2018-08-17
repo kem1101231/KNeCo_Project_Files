@@ -1,5 +1,125 @@
 <odoo>
     <data>
+       <record id="request_form_base" model="ir.ui.view">
+            <field name="name">request.form.base</field>
+            <field name="model">mgc_request.base</field>
+            <field name="arch" type="xml">
+                <form string="My Request">
+      
+                    <sheet>
+                      
+                        <div class="oe_title">
+                            <label for="request_number"/>
+                            <h2><field name="name"/></h2>
+                        </div>
+                        <group>
+                            <group>
+                                <separator string="Requestor" colspan="2"/>
+                                <field name="purpose"/>
+                          
+                            </group>
+                            <group>
+                                <separator string="Request Through" colspan="2"/>
+                              
+                            </group>
+                        </group>
+                         <notebook>
+                            <page string="Request Board">
+                                <field name="request_line" mode="tree" attrs="{'readonly': [('state', 'in', ['done','cancelled'])]}">
+                                    <tree string="Request Lines" editable="bottom">
+                                        <field name="request_id" invisible="1"/>
+                                        <field name="product_id"/>
+                                        <field name="description"/>
+                                        <field name="date_scheduled"/>
+                                        <field name="account_id"/>
+                                        <field name="unit_uom" options="{'no_create':True,'no_open':True}"/>
+                                        <field name="quantity"/>
+                                        <field name="price_unit"/>
+                                        <field name="purchase_id" invisible="1"/>
+                                        <field name="taxes_id" widget="many2many_tags"/>
+                                        <field name="price_subtotal" widget="monetary"/>
+                                    </tree>
+                                    <form string="Request Lines">
+                                        <header>
+                                            <field name="state" widget="statusbar"/>
+                                        </header>
+                                        <sheet>
+                                            <!--<div class="oe_button_box" name="button_box">-->
+                                                <!--<button type="object" name="action_view_order" class="oe_stat_button"-->
+                                                        <!--icon="fa-shopping-cart" attrs="{'invisible':[('state', 'in', ['draft','print_rf', 'void', 'confirmed'])]}">-->
+                                                    <!--<field name="order_lines" widget="statinfo" string="Purchases"/>-->
+                                                <!--</button>-->
+                                            <!--</div>-->
+                                             <group>
+                                                <group>
+                                                    <field name="request_id" invisible="1"/>
+                                                    <field name="product_id" readonly="1"/>
+                                                    <field name="description" readonly="1"/>
+                                                    <field name="account_id" readonly="1"/>
+                                                    <field name="date_scheduled" readonly="1"/>
+                                                    <field name="unit_uom" readonly="1"/>
+                                                </group>
+                                                <group>
+                                                    <field name="quantity" readonly="1"/>
+                                                    <field name="price_unit" readonly="1"/>
+                                                    <field name="taxes_id" widget="many2many_tags" readonly="1"/>
+                                                    <field name="company_id" readonly="1"/>
+                                                    <field name="purchase_id" invisible="1"/>
+                                                </group>
+                                            </group>
+                                            <notebook>
+                                                <page string="Order Lines">
+                                                    <field name="order_lines"/>
+                                                </page>
+                                            </notebook>
+                                        </sheet>
+                                    </form>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline">
+                                        <label for="amount_total"/>
+                                    </div>
+                                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                                <div class="oe_clear"/>
+                            </page>
+                            <page string="References">
+                                <group>
+                                    <group>
+                                        <field name="order_status" attrs="{'readonly': [('state', 'in', ['done','cancelled'])], 'invisible':[('state', '!=', 'done')]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Approvals">
+                                <field name="approver_ids" attrs="{'readonly': [('state', 'in', ['done','cancelled'])]}">
+                                    <tree string="Approvals" editable="bottom">
+                                        <field name="request_id" invisible="1"/>
+                                        <field name="position_id" options="{'no_create':True}"/>
+                                        <field name="employee_id" options="{'no_create':True}"/>
+                                        <field name="is_approved"/>
+                                    </tree>
+                                    <form string="Approvals">
+                                        <group>
+                                            <group>
+                                                <field name="request_id" invisible="1"/>
+                                                <field name="position_id" options="{'no_create':True}" readonly="1"/>
+                                                <field name="employee_id" options="{'no_create':True}" readonly="1"/>
+                                                <field name="is_approved" readonly="1"/>
+                                                <field name="is_approved" readonly="1"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                       
+                    </sheet>
+                   
+                </form>
+            </field>
+        </record>
 
         <record id="account_request_action_view" model="ir.actions.act_window">
             <field name="name">Requests</field>
