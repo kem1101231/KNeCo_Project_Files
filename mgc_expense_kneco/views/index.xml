@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- window action -->
+        <!--
+            The following tag is an action definition for a "window action",
+            that is an action opening a view or a set of views
+        -->
+        <!-- ============================  Views  =================================== -->
+
+
+        <record id="view_your_model_name_tree" model="ir.ui.view">
+            <field name="name">Checks_tree</field>
+            <field name="model">mgc.expense.base</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                                <field name="name"/>
+                                <field name="expense_type" />
+                                <field name="purpose"/>
+                                <field name="bu_id"/> 
+                                <field name="create_date" string="Date Prepared"  widget="date"/>
+                                <field  name="amount" widget="monetary"/>
+                </tree>
+            </field>
+        </record>
+        <record id="check_list_tree" model="ir.ui.view">
+            <field name="name">check_list_tree</field>
+            <field name="model">mgc.expense.checks</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                                <field name="name"/>
+                                <field name="bu_source"/>
+                                <field name="bank_source" string="Bank Source"/>
+                                <field name="check_date"/>
+                                <field name="recon_status"/>
+                                <field class="oe_left" name="amount" widget="monetary"/>
+                </tree>
+            </field>
+        </record>
+        <record id="bank_acct_list_tree" model="ir.ui.view">
+            <field name="name">bank_acct_list_tree</field>
+            <field name="model">mgc.expense.bank_accounts</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                                <field name="name"/>
+                                <field name="account_number" />
+                                <field name="bank_id" string="Bank Source"/>
+                                <field name="bu_id"/>
+                                <field name="cash_on_bank"/>
+                </tree>
+            </field>
+        </record>
+            <record model="ir.ui.view" id="add_form">
+
+                <field name="name">course_form</field>
+                <field name="model">mgc.expense.base</field>
+                <field name="arch" type="xml">
+
+                     <form>
+                            <!--<header> ... content of the status bar  ... </header>-->
+                            <sheet>
+                                 <div class="oe_title" style="margin-bottom: 23px;">
+                                    <label for="name"/>
+                                    <h1>
+                                        <field name="name" placeholder="Provide the expense id"/>
+                                    </h1>
+                                </div>
+                                <group>
+                                    <group>
+                                        <field name="expense_type"/>
+                                        <field name="bu_id"/>
+                                        <field name="purpose"/>
+                                        <field name="is_efo" attrs="{'invisible': [('is_efo', '=', None)]}"/>
+                                        <field name="is_shared"/>
+                                    </group>
+                                    <group>
+                                        <field name="amount"/>
+                                        <!--
+                                        <field name="fund_source"/>
+                                        <field name="acct_number"/>
+                                        <field name="bank_source"/>
+                                        <field name="bu_source"/>
+                                    -->
+                                    </group>
+                                    
+                                </group>
+                                <notebook class="oe_read_only">
+                                        <page string="Prepared Checks for the Expense">
+                                            <field name="check_list"/>
+                                        </page>
+                                    </notebook>
+                            </sheet>
+                     </form>
+                </field>
+            </record>
+            <record model="ir.ui.view" id="bank_form">
+
+                <field name="name">bank_form</field>
+                <field name="model">mgc.expense.banks</field>
+                <field name="arch" type="xml">
+
+                     <form>
+                            <!--<header> ... content of the status bar  ... </header>-->
+                            <sheet>
+                                 <div class="oe_title" style="margin-bottom: 23px;">
+                                    <label for="bank_id"/>
+                                    <h1>
+                                        <field name="bank_id" placeholder="Identify bank name"/>
+                                    </h1>
+                                </div>
+                        
+                                    <notebook>
+                                        <page string="Bank Accounts">
+                                            <field name="bank_accounts">
+                                            </field>
+                                        </page>
+                                         <page string="Prepared Checks">
+                                            <field name="check_list" >
+                                            </field>
+                                        </page>
+                                    </notebook>
+                            
+
+                            </sheet>
+
+                     </form>
+
+                </field>
+            </record>
+             <record model="ir.ui.view" id="bu_form">
+
+                <field name="name">bu_form</field>
+                <field name="model">mgc.expense.bu</field>
+                <field name="arch" type="xml">
+
+                     <form>
+                            <!--<header> ... content of the status bar  ... </header>-->
+                            <sheet>
+                                 <div class="oe_title" style="margin-bottom: 23px;">
+                                    <label for="bu_id"/>
+                                    <h1>
+                                        <field name="bu_id" placeholder="Identify business unit"/>
+                                    </h1>
+                                </div>
+                        
+                                    <notebook>
+                                        <page string="Bank Accounts">
+                                            <field name="bank_accounts">
+                                            </field>
+                                        </page>
+                                         <page string="Prepared Checks">
+                                            <field name="check_list" >
+                                            </field>
+                                        </page>
+                                    </notebook>
+                            </sheet>
+
+                     </form>
+
+                </field>
+            </record>
+            <record model="ir.ui.view" id="check_form">
+
+                <field name="name">checks_form</field>
+                <field name="model">mgc.expense.checks</field>
+                <field name="arch" type="xml">
+
+                     <form>
+                            
+                            <sheet>
+                                <button class="oe_highlight oe_right oe_read_only" string="Reconcile" confirm="Would you like to reconcile the check?" attrs="{'invisible': [('recon_status', '=', None)]}"/>
+                                 <div class="oe_title" style="margin-bottom: 23px;">
+                                    <label for="name"/>
+                                    <h1>
+                                        <field name="name" placeholder="Provide the check number"/>
+                                    </h1>
+                                </div>
+                                <group>
+                                    <group>
+                                        
+                                        
+                                        <field name="check_date"/>
+                                        <field name="account_number" string="Account Name"/>
+                                        <field name="bank_account"/>
+                                        <field name="bank_source"/>
+                                        <field name="amount" />
+                                        
+                                        
+                                    </group>
+                                    <group>
+                                        <field name="expense_id"/>
+                                        <field name="purpose"/>
+                                        <field name="bu_source"/>
+                                        
+                                        <field class="oe_read_only" name="recon_status" />
+                                        <field class="oe_read_only" name="recon_date" />
+                                    </group>
+                                    
+                                </group>
+
+                            </sheet>
+
+                     </form>
+
+                </field>
+            </record>
+            <record model="ir.ui.view" id="bank_acct_form">
+
+                <field name="name">checks_form</field>
+                <field name="model">mgc.expense.bank_accounts</field>
+                <field name="arch" type="xml">
+
+                     <form>
+                            
+                            <sheet>
+                                 <div class="oe_title" style="margin-bottom: 23px;">
+                                    <label for="name"/>
+                                    <h1>
+                                        <field name="name" placeholder="Provide an account name"/>
+                                    </h1>
+                                </div>
+                                <group>
+                                    <group>
+                                        <field name="account_number"/>
+                                        <field name="bank_id"/>
+                                        <field name="bu_id"/>
+                                        <field name="cash_on_bank"/>
+                                    </group>
+                                    
+                                </group>
+                                <notebook class="oe_read_only">
+                                    <page string="Prepared Checks from this Account">
+                                        <field name="check_ids"/>
+                                    </page>
+                                </notebook>
+
+                            </sheet>
+
+                     </form>
+
+                </field>
+            </record>
+                <record model="ir.ui.view" id="resource_kanban_view">
+                    <field name="name">banks</field>
+                    <field name="model">mgc.expense.banks</field>
+                    <field name="type">kanban</field>
+                    <field name="arch" type="xml">
+                        <kanban>
+                            <templates>
+                                <t t-name="kanban-box">
+                                     <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                        <div class="col-lg-4">
+                                            <div class="oe_resource_image">
+                                            <img t-att-src="kanban_image('res.partner.image', 'image', 'mgc.expense.banks.bank_id')" class="oe_resource_picture"/>
+                                        </div>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <div class="oe_resource_details">
+                                            <ul>
+                                               <li><field name="name"/></li>
+                                             </ul>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </record>
+                <record model="ir.ui.view" id="bu_kanban_view">
+                    <field name="name">bus</field>
+                    <field name="model">mgc.expense.bu</field>
+                    <field name="type">kanban</field>
+                    <field name="arch" type="xml">
+                        <kanban>
+                            <templates>
+                                <t t-name="kanban-box">
+                                     <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                        <div class="oe_resource_image">
+                                            <a type="edit"><img t-att-src="kanban_image('object.name', 'photo', record.id.value)" class="oe_resource_picture"/></a>
+                                        </div>
+                                        <div class="oe_resource_details">
+                                            <ul>
+                                               <li><field name="name"/></li>
+                                             </ul>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </record>
+
+        <!-- ======================================================================== -->
+
+        <record model="ir.actions.act_window" id="course_list_action">
+            <field name="name">Expenses</field>
+            <field name="res_model">mgc.expense.base</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add an expense
+                </p>
+            </field>
+        </record >
+        <record model="ir.actions.act_window" id="bank_list_action">
+            <field name="name">Included Banks</field>
+            <field name="res_model">mgc.expense.banks</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a bank
+                </p>
+            </field>
+        </record >
+        <record model="ir.actions.act_window" id="check_list_action">
+            <field name="name">Prepared Checks</field>
+            <field name="res_model">mgc.expense.checks</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Ceate a check
+                </p>
+            </field>
+        </record >
+        <record model="ir.actions.act_window" id="bank_acct_list_action">
+            <field name="name">Bank Accounts</field>
+            <field name="res_model">mgc.expense.bank_accounts</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a bank account
+                </p>
+            </field>
+        </record >
+        <record model="ir.actions.act_window" id="bu_list_action">
+            <field name="name">Business Units</field>
+            <field name="res_model">mgc.expense.bu</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a business unit
+                </p>
+            </field>
+        </record >
+        <record model="ir.actions.act_window" id="acct_list_action">
+            <field name="name">Expense Type (Accounts)</field>
+            <field name="res_model">mgc.expense.accounts</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a expense type (this will be considered as an account entry)
+                </p>
+            </field>
+        </record >
+
+        <!-- top level menu: no parent -->
+        <menuitem id="main_openacademy_menu" name="MGC Expenses"/>
+        <!-- A first level in the left side menu is needed
+             before using action= attribute -->
+
+        <menuitem id="openacademy_menu_test" name="Expenses"
+                  parent="main_openacademy_menu" action="course_list_action"/>
+        <menuitem id="mgc_expenses_check_menu" name="Checks"
+                  parent="main_openacademy_menu" action="check_list_action"/>
+        
+        <menuitem id="mgc_expenses_referene_menu" name="References"
+                  parent="main_openacademy_menu"/>
+        <menuitem id="openacademy_menu_test2" name="Banks"
+                  parent="mgc_expenses_referene_menu" action="bank_list_action"/>
+        <menuitem id="mgc_expenses_bank_acct_menu" name="Bank Accounts"
+                  parent="mgc_expenses_referene_menu" action="bank_acct_list_action"/>
+        <menuitem id="mgc_expenses_bu_menu" name="Business Units"
+                  parent="mgc_expenses_referene_menu" action="bu_list_action"/>
+        <menuitem id="mgc_expenses_acct_menu" name="Expense Types (Accounts)"
+                  parent="mgc_expenses_referene_menu" action="acct_list_action"/>
+
+
+
+
+
+    </data>
+</odoo>
