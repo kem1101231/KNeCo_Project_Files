@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!-- This Menu Item is Root -->
+        <menuitem id="account_request_management_root"
+                  name="Requests"
+                  web_icon="mgc_request,static/description/icon.png"
+                  groups="base.group_user"/>
+
+        <!-- Request Management -->
+        <menuitem id="account_request_management_parent"
+                  name="Requests" parent="mgc_request.account_request_management_root" sequence="1"
+                  groups="mgc_request.group_request_employee,mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
+
+        <menuitem id="menu_my_request"
+                  name="My Requests" parent="account_request_management_parent"
+                  action="account_request_action_view" sequence="1"
+                  groups="mgc_request.group_request_employee"/>
+
+        <menuitem id="menu_department_request"
+                  name="Other Requests" parent="account_request_management_parent"
+                  action="account_request_department_action_view" sequence="2"
+                  groups="mgc_request.group_request_employee,mgc_request.group_request_supervisor"/>
+
+        <!-- To Approve Menu -->
+        <menuitem id="account_request_to_approve_menu"
+                  name="To Approve" parent="account_request_management_root"
+                  sequence="2"
+                  groups="mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
+
+        <!--Request to Approve-->
+        <!--<menuitem id="account_request_to_approves_menu"-->
+                  <!--name="Request to Approve" parent="account_request_to_approve_menu"-->
+                  <!--action="account_request_to_approve_action_view"-->
+                  <!--sequence="1"-->
+                  <!--groups="mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>-->
+
+        <!--Cash-->
+        <menuitem id="account_request_to_approves_cash_menu"
+                  name="Cash" parent="account_request_to_approve_menu"
+                  action="account_request_cash_action_view"
+                  sequence="1"
+                  groups="mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
+
+        <!--Payment-->
+        <menuitem id="account_request_to_approves_payment_menu"
+                  name="Payment" parent="account_request_to_approve_menu"
+                  action="account_request_payment_action_view"
+                  sequence="2"
+                  groups="mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
+
+        <!--Purchase-->
+        <menuitem id="account_request_to_approves_purchase_menu"
+                  name="Purchase" parent="account_request_to_approve_menu"
+                  action="account_request_purchase_action_view"
+                  sequence="3"
+                  groups="mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
+
+        <!--Travel-->
+        <menuitem id="account_request_to_approves_travel_menu"
+                  name="Travel" parent="account_request_to_approve_menu"
+                  action="account_request_travel_action_view"
+                  sequence="4"
+                  groups="mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
+
+        <!--Work-->
+        <menuitem id="account_request_to_approves_work_menu"
+                  name="Work Order" parent="account_request_to_approve_menu"
+                  action="account_request_work_action_view"
+                  sequence="5"
+                  groups="mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
+
+        <!--Others-->
+        <menuitem id="account_request_to_approves_others_menu"
+                  name="Others" parent="account_request_to_approve_menu"
+                  action="account_request_others_action_view"
+                  sequence="6"
+                  groups="mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
+
+        <!-- Reports -->
+        <menuitem id="account_request_reports_menu"
+                  name="Reports" parent="account_request_management_root"
+                  sequence="3"
+                  groups="mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
+
+        <!--Report Request-->
+        <menuitem id="account_request_report" name="Request" parent="account_request_reports_menu"
+                  action="report_request_action_view" sequence="1"/>
+
+        <!-- Configuration -->
+        <menuitem id="account_request_configuration_menu"
+                  name="Configuration" parent="account_request_management_root"
+                  sequence="4"
+                  groups="mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
+
+        <!--Request Type-->
+        <menuitem id="account_request_type_menu"
+                  name="Request Type" parent="account_request_configuration_menu"
+                  action="account_request_type_action_view" sequence="1"
+                  groups="mgc_request.group_request_manager"/>
+
+        <!--Business Unit-->
+        <menuitem id="account_request_company_menu"
+                  name="Business Unit" parent="account_request_configuration_menu"
+                  action="account_request_company_action_view" sequence="2"
+                  groups="mgc_request.group_request_manager"/>
+
+        <!--Source-->
+        <menuitem id="account_request_source_menu"
+                  name="Source" parent="account_request_configuration_menu"
+                  action="account_request_source_action_view" sequence="3"
+                  groups="mgc_request.group_request_manager"/>
+
+        <!--Position-->
+        <menuitem id="account_request_position_menu"
+                  name="Position" parent="account_request_configuration_menu"
+                  action="account_request_position_action_view" sequence="4"
+                  groups="mgc_request.group_request_manager"/>
+    </data>
+</odoo>

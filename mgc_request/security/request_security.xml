@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="0">
+        <!--Asset Group Security and User Access View -->
+        <record id="module_category_request" model="ir.module.category">
+            <field name="name">Request</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <!--Employee Access-->
+        <record id="group_request_employee" model="res.groups">
+            <field name="name">Employee</field>
+            <field name="category_id" ref="module_category_request"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <!--Purchase Supervisory Access-->
+        <record id="group_request_supervisor" model="res.groups">
+            <field name="name">Supervisor</field>
+            <field name="category_id" ref="module_category_request"/>
+            <field name="implied_ids" eval="[(4, ref('group_request_employee'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <!--Managerial Access-->
+        <record id="group_request_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="module_category_request"/>
+            <field name="implied_ids" eval="[(4, ref('group_request_supervisor'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+    </data>
+    <data noupdate="1">
+        <!--Asset Handovers Rule-->
+        <record id="account_request_rule" model="ir.rule">
+            <field name="name">Account Request Rule</field>
+            <field name="model_id" ref="mgc_request.model_account_request"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id','child_of',[user.company_id.id])]</field>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+
+    </data>
+</odoo>

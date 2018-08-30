@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!--Custom Footer-->
+        <template id="custom_external_layout_footer_request" inherit_id="report.external_layout_footer" primary="True">
+             <xpath expr="//div[@class='text-center']" position="before">
+                <div class="footer">
+                    <t t-foreach="docs" t-as="o">
+                        <table width="100%" style="font-size:12px;">
+                            <thead>
+                               <t t-foreach="o.approver_ids" t-as="approve">
+                                   <div class="col-xs-4" align="middle">
+                                       <strong><span class="text-uppercase" t-field="approve.employee_id.name"/></strong><br/>
+                                       <span class="text-uppercase" t-field="approve.position_id.name"/>
+                                   </div>
+                                </t>
+                            </thead>
+                        </table><br/><br/>
+                        <!--<table width="100%" style="font-size:12px;">-->
+                            <!--<thead>-->
+                                <!--<tr>-->
+                                    <!--&lt;!&ndash;<td style="width:25%;text-align:center;font-weight:bold;"><span class="text-uppercase" t-field="o.approver_requestor_id.name"/></td>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<td style="width:25%;text-align:center;font-weight:bold;"><span class="text-uppercase" t-field="o.approver_supervisor_id.name"/></td>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<td style="width:25%;text-align:center;font-weight:bold;"><span class="text-uppercase" t-field="o.approver_manager_id.name"/></td>&ndash;&gt;-->
+                                <!--</tr>-->
+                            <!--</thead>-->
+                            <!--<tbody>-->
+                                <!--<tr style="padding:1px;vertical-align:center;">-->
+                                    <!--<td style="width:25%;text-align:center;"><span>________________________________</span></td>-->
+                                    <!--<td style="width:25%;text-align:center;"><span>________________________________</span></td>-->
+                                    <!--<td style="width:25%;text-align:center;"><span>________________________________</span></td>-->
+                                <!--</tr>-->
+                                <!--<tr>-->
+                                    <!--<td style="width:25%;text-align:center;"><span>Requestor's Signature</span></td>-->
+                                    <!--<td style="width:25%;text-align:center;"><span>Supervisor's Signature</span></td>-->
+                                    <!--<td style="width:25%;text-align:center;"><span>Manager's Signature</span></td>-->
+                                <!--</tr>-->
+                            <!--</tbody>-->
+                        <!--</table>-->
+                        <!--<br/>-->
+                    </t>
+                </div>
+             </xpath>
+             <xpath expr="//ul[1]" position="replace"/>
+        </template>
+
+        <!--Custom Header and Footer-->
+        <template id="external_layout_footer_custom_request" inherit_id="report.external_layout" primary="True">
+            <xpath expr="//t[@t-call='report.external_layout_footer']" position="attributes">
+                <attribute name="t-call">mgc_request.custom_external_layout_footer_request</attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>
