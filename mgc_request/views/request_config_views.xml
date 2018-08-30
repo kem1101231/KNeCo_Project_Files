@@ -322,5 +322,39 @@
               </p>
             </field>
         </record>
+
+        <record id="mgc_coa_list_action_view" model="ir.actions.act_window">
+            <field name="name">COA</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mgc.account_chart.bu</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Create Your Position Here!
+              </p>
+            </field>
+        </record>
+        <record id="mgc_bran_list_action_view" model="ir.actions.act_window">
+            <field name="name">Branches</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mgc.request.bu_branches</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Create Your Position Here!
+              </p>
+            </field>
+        </record>
+        <record id="mgc_rq_type_list_action_view" model="ir.actions.act_window">
+            <field name="name">Request New Types</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mgc.request.request_types</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Create Your Position Here!
+              </p>
+            </field>
+        </record>
     </data>
 </odoo>

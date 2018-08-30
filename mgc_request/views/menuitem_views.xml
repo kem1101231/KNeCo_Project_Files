@@ -116,5 +116,18 @@
                   name="Position" parent="account_request_configuration_menu"
                   action="account_request_position_action_view" sequence="4"
                   groups="mgc_request.group_request_manager"/>
+
+        <menuitem id="mgc_coa_list_menu"
+                  name="COA" parent="account_request_configuration_menu"
+                  action="mgc_coa_list_action_view" sequence="4"
+                  groups="mgc_request.group_request_manager"/> 
+         <menuitem id="mgc_bran_list_menu"
+                  name="Banches" parent="account_request_configuration_menu"
+                  action="mgc_bran_list_action_view" sequence="5"
+                  groups="mgc_request.group_request_manager"/> 
+          <menuitem id="mgc_rq_type_list_menu"
+                  name="Request New Types" parent="account_request_configuration_menu"
+                  action="mgc_rq_type_list_action_view" sequence="6"
+                  groups="mgc_request.group_request_manager"/>                                   
     </data>
 </odoo>

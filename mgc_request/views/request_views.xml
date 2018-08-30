@@ -55,10 +55,10 @@
                         <group>
                             <group>
                                 <separator string="Requestor" colspan="2"/>
-                                <field name="company_id" attrs="{'readonly':[('state', 'not in',['draft', 'print_rf', 'void'])]}" options="{'no_create':True}"/>
-                                <field name="department_id" attrs="{'readonly':[('state', 'not in',['draft', 'print_rf', 'void'])]}" options="{'no_create':True}"
+                                <field name="company_id" editable="False" attrs="{'readonly':[('state', 'not in',['draft', 'print_rf', 'void'])]}" options="{'no_create':True}"/>
+                                <field name="department_id" editable="False"  attrs="{'readonly':[('state', 'not in',['draft', 'print_rf', 'void'])]}" options="{'no_create':True}"
                                        domain="[('company_id', '=', company_id)]"/>
-                                <field name="employee_id" attrs="{'readonly':[('state', 'not in',['draft', 'print_rf', 'void'])]}" options="{'no_create':True}"
+                                <field name="employee_id" editable="False"  widget="selection" attrs="{'readonly':[('state', 'not in',['draft', 'print_rf', 'void'])]}" options="{'no_create':True}"
                                        domain="[('company_id', '=', company_id), ('department_id', '=', department_id)]"/>
                                  <field name="request_type_id" options="{'no_create':True,'no_open':True}"
                                        attrs="{'readonly':[('state', 'not in',['draft', 'print_rf', 'void'])]}"

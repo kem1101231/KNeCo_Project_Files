@@ -69,6 +69,10 @@ class RequestForm(models.Model):
     request_selection = fields.Selection(string="Requesting To", selection=[('company', 'Company'), ('contacts', 'Contacts')], required=True, default='company')
     partner_id = fields.Many2one(comodel_name="res.partner", string="Contacts", required=False)
     request_type_id = fields.Many2one(comodel_name="account.request.type", string="Type", required=True)
+    
+    ##request_type_id = fields.Many2one('mgc.request.request_types', string="Request Type")
+    ##request_type_line_id = fields.Many2one('mgc.request.request_names', string="Request Name", domain="[('mgc.request.request_names.rq_type','=','request_type_id.id')]")
+
     request_type_line_id = fields.Many2one(comodel_name="account.request.type.line", string="Request Name", required=False)
     source_id = fields.Many2one(comodel_name="account.request.source", string="Source", required=False, )
     internal_type = fields.Char(string="Internal Type", required=False)

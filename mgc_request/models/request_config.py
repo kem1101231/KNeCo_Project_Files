@@ -4,6 +4,41 @@ from datetime import datetime, date
 from odoo.addons import decimal_precision as dp
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
+#===============================================================================================================================================
+
+class Request_Conduct_Types(models.Model):
+    _name = 'mgc.request.conduct_types'
+
+    name = None
+    l1_position_approval = None
+    l2_position_approval = None
+    l3_position_approval = None
+    l4_position_approval = None
+
+class RequestGroupTypes(models.Model):
+    _name='mgc.request.bu_group_type'
+
+    name = fields.Char(string="Group Type")
+class RequestBranches(models.Model):
+    _name='mgc.request.bu_branches'
+
+    name = fields.Char(related="acct_loc_id.bd_id.name",string="Branch/Department Name")
+    acct_loc_id = fields.Many2one('mgc.acct_chart.acct_location', string="COA Location Reference")
+    group_id = fields.Many2one('mgc.request.bu_group_type', string="Group Type")
+
+class RequestRequestTypes(models.Model):
+	_name='mgc.request.request_types'
+
+	name = fields.Char(string="Request Type")
+	rq_name = fields.One2many('mgc.request.request_names','rq_type',string="Request Names")
+
+class RequestRequestNames(models.Model):
+	_name = 'mgc.request.request_names'		
+
+	name = fields.Char(string="Request Name")
+	rq_type = fields.Many2one('mgc.request.request_types', string="Request Type") 	
+
+#==============================================================================================================================================
 
 class AccountRequestType(models.Model):
     _name = 'account.request.type'
@@ -17,8 +52,10 @@ class AccountRequestType(models.Model):
     request_department_id = fields.Many2one(comodel_name="account.request.department", string="Branch / Department", required=True)
     company_id = fields.Many2one(comodel_name="res.company", string="Company", required=False, )
     department_id = fields.Many2one(comodel_name="hr.department", string="Branch / Department", required=False)
-    code = fields.Char(string="Code", required=False, )
+    code = fields.Char(string="Code", required=False,)
     active = fields.Boolean(string="Active", required=True, default=True)
+    coa_id = None
+    
 
     @api.model
     def create(self, values):

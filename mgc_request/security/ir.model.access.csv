@@ -47,3 +47,4 @@ access_manager_product_uom,product.uom,product.model_product_uom,group_request_m
 access_manager_hr_employee,hr.employee,hr.model_hr_employee,group_request_manager,1,0,0,0
 access_manager_hr_department,hr.department,hr.model_hr_department,group_request_manager,1,0,0,0
 access_manager_hr_job,hr.job,hr.model_hr_job,group_request_manager,1,0,0,0
+
