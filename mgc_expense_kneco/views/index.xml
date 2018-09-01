@@ -59,36 +59,44 @@
                      <form>
                             <!--<header> ... content of the status bar  ... </header>-->
                             <sheet>
-                                 <div class="oe_title" style="margin-bottom: 23px;">
-                                    <label for="name"/>
+                                 <div class="oe_title" style="margin-bottom: 10px;" >
+                                    <label for="name" class="oe_read_only"/>
                                     <h1>
-                                        <field name="name" placeholder="Provide the expense id"/>
+                                        <field name="name" class="oe_read_only" placeholder="Provide the expense id"/>
                                     </h1>
                                 </div>
                                 <group>
+                                    <group string="Request Reference">
+                                    </group>
+                                    <group string="Expense Details">
+                                    </group>
+                                    <group>
+                                        <field name="request_reference"/>
+                                        <field name="request_bu_id"/>
+                                        <field name="department"/>
+                                    </group>
                                     <group>
                                         <field name="expense_type"/>
-                                        <field name="bu_id"/>
                                         <field name="purpose"/>
                                         <field name="is_efo" attrs="{'invisible': [('is_efo', '=', None)]}"/>
                                         <field name="is_shared"/>
                                     </group>
                                     <group>
-                                        <field name="amount"/>
-                                        <!--
-                                        <field name="fund_source"/>
-                                        <field name="acct_number"/>
-                                        <field name="bank_source"/>
-                                        <field name="bu_source"/>
-                                    -->
+                                        <field name="request_type"/>
+                                        <field name="request_name"/>
+                                        <field name="request_purpose"/>
                                     </group>
-                                    
+                                    <group>
+                                        <field name="bu_id"/>
+                                        <field name="amount"/>
+                                        <field name="check_list_amount"/>
+                                    </group>
                                 </group>
                                 <notebook class="oe_read_only">
                                         <page string="Prepared Checks for the Expense">
                                             <field name="check_list"/>
                                         </page>
-                                    </notebook>
+                                </notebook>
                             </sheet>
                      </form>
                 </field>
@@ -168,7 +176,8 @@
                      <form>
                             
                             <sheet>
-                                <button class="oe_highlight oe_right oe_read_only" string="Reconcile" confirm="Would you like to reconcile the check?" attrs="{'invisible': [('recon_status', '=', None)]}"/>
+                                <button name="reconcile_check" type="object" class="oe_highlight oe_right oe_read_only" string="Reconcile" confirm="Would you like to reconcile the check?" attrs="{'invisible': [('recon_status', '=', True)]}"/>
+                                 <!--<button name="render_html" class="oe_highlight oe_right oe_read_only" string="Print" attrs="{'invisible': [('recon_status', '=', None)]}"/>-->
                                  <div class="oe_title" style="margin-bottom: 23px;">
                                     <label for="name"/>
                                     <h1>
@@ -354,8 +363,16 @@
             </field>
         </record >
 
+<!-- ====================================        Report Generation      ============================================================= -->
+
+        
+        
+
+<!-- ================================================================================================================================ -->        
+
+         
         <!-- top level menu: no parent -->
-        <menuitem id="main_openacademy_menu" name="MGC Expenses"/>
+        <menuitem id="main_openacademy_menu" name="MGC Expenses" web_icon="mgc_expense_kneco,static/description/icon.png"/>
         <!-- A first level in the left side menu is needed
              before using action= attribute -->
 

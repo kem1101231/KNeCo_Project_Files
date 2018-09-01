@@ -19,7 +19,9 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+       # any module necessary for this one to work correctly
+    'depends': ['base', 'mgc_request'],
+
 
     # always loaded
     'data': [
@@ -27,6 +29,8 @@
         #'views/views.xml',
         #'views/templates.xml',
         'views/index.xml',
+        #'views/check_form.xml',
+        #'views/check_record.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
