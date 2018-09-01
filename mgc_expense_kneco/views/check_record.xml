@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>    
+        <data>
+         <report
+            string="Check Test"
+            report_name = "Check Test"
+            id="fleet_action_job_card_report"
+            model="report.mgc_expense_kneco.report_fleet_job_card"
+            report_type="qweb-pdf"
+            name="mgc_expense_kneco.report_fleet_job_card"
+            file="mgc_expense_kneco.report_fleet_job_card"
+        />
+
+    </data>
+
+</odoo>

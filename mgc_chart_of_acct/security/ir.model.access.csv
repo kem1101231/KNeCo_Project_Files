@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mgc_chart_of_acct_mgc_chart_of_acct,mgc_chart_of_acct.mgc_chart_of_acct,model_mgc_chart_of_acct_mgc_chart_of_acct,,1,0,0,0

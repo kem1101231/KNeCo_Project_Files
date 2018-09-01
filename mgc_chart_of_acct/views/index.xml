@@ -1,0 +1,235 @@
+<odoo>
+	<data>
+
+
+        <!--  ========================================================================================================================== -->
+
+
+        <record id="view_your_model_name_tree" model="ir.ui.view">
+            <field name="name">Chart of Accounts</field>
+            <field name="model">mgc.account_chart.bu</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                                <field name="name"/>
+                                <field name="loc_bu_name" />
+                                <field name="loc_id" />
+                                <field name="fs_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_your_model_name_tree" model="ir.ui.view">
+            <field name="name">Business Units</field>
+            <field name="model">mgc.coa_legend.bu_chart</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                        <field name="idcode"/>
+                        <field name="name"/>
+                        <field name="bu_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_your_model_name_tree" model="ir.ui.view">
+            <field name="name">Location</field>
+            <field name="model">mgc.coa_legend.loc_chart</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                        <field name="idcode"/>
+                        <field name="name"/>
+                        <field name="bu_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--  ========================================================================================================================== -->
+
+            <record model="ir.ui.view" id="bu_chart_form">
+                <field name="name">bu_chart_form</field>
+                <field name="model">mgc.coa_legend.bu_chart</field>
+                <field name="arch" type="xml">
+
+                     <form>
+                            <sheet>
+                                <group>
+                                        <field name="bu_id"/>
+                                        <field name="name"/>
+                                        <field name="idcode"/>
+                                </group>
+                            </sheet>
+                     </form>
+                </field>
+            </record>
+            <record model="ir.ui.view" id="loc_chart_form">
+                <field name="name">loc_chart_form</field>
+                <field name="model">mgc.coa_legend.loc_chart</field>
+                <field name="arch" type="xml">
+
+                     <form>
+                            <sheet>
+                                <group>
+                                        <field name="idcode"/>
+                                        <field name="name"/>
+                                        <field name="bu_id"/>
+                                </group>
+                            </sheet>
+                     </form>
+                </field>
+            </record>
+
+
+        <!--  ========================================================================================================================== -->
+
+        <!--  ========================================================================================================================== -->
+
+		<record model="ir.actions.act_window" id="coa_list_action">
+            <field name="name">Chart of Accounts</field>
+            <field name="res_model">mgc.account_chart.bu</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add an entry to the chart
+                </p>
+            </field>
+        </record >
+        <record model="ir.actions.act_window" id="acct_source_list_action">
+            <field name="name">Account Source</field>
+            <field name="res_model">mgc.acct_chart.acct_location</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a Location
+                </p>
+            </field>
+        </record >
+        <record model="ir.actions.act_window" id="bu_list_action">
+            <field name="name">Business Units</field>
+            <field name="res_model">mgc.coa_legend.bu_chart</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a bank
+                </p>
+            </field>
+        </record >
+        <record model="ir.actions.act_window" id="loc_list_action">
+            <field name="name">Locations</field>
+            <field name="res_model">mgc.coa_legend.loc_chart</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Ceate a check
+                </p>
+            </field>
+        </record >
+        <record model="ir.actions.act_window" id="bd_list_action">
+            <field name="name">Branches/Departments</field>
+            <field name="res_model">mgc.coa_legend.bd_chart</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a bank account
+                </p>
+            </field>
+        </record >
+        <record model="ir.actions.act_window" id="bt_list_action">
+            <field name="name">Business Types</field>
+            <field name="res_model">mgc.coa_legend.bt_chart</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a business unit
+                </p>
+            </field>
+        </record >
+
+        <record model="ir.actions.act_window" id="cen_list_action">
+            <field name="name">Center (for MSG)</field>
+            <field name="res_model">mgc.coa_legend.center_chart</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a expense type (this will be considered as an account entry)
+                </p>
+            </field>
+        </record >
+        <record model="ir.actions.act_window" id="acct_fs_list_action">
+            <field name="name">FS Class</field>
+            <field name="res_model">mgc.acct_chart.acct_finance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a expense type (this will be considered as an account entry)
+                </p>
+            </field>
+        </record >
+
+        <record model="ir.actions.act_window" id="fs_list_action">
+            <field name="name">FS Class</field>
+            <field name="res_model">mgc.coa_legend.fs_class_chart</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a expense type (this will be considered as an account entry)
+                </p>
+            </field>
+        </record >
+
+        <record model="ir.actions.act_window" id="sub_list_action">
+            <field name="name">FS Sub-class</field>
+            <field name="res_model">mgc.coa_legend.sub_class_chart</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a expense type (this will be considered as an account entry)
+                </p>
+            </field>
+        </record >
+
+        <record model="ir.actions.act_window" id="spec_list_action">
+            <field name="name">FS Specifics</field>
+            <field name="res_model">mgc.coa_legend.specific</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a expense type (this will be considered as an account entry)
+                </p>
+            </field>
+        </record >
+
+
+		<menuitem id="mgc_acct_chart_root" 
+		   			 name="MGC COA" 
+		   			 web_icon="mgc_expense_kneco,static/description/icon.png"/>
+        <!-- A first level in the left side menu is needed
+             before using action= attribute -->
+
+        <menuitem id="mgc_acct_chart_head" name="Chart of Accounts"
+                  parent="mgc_acct_chart_root" action="coa_list_action"/>
+
+        <menuitem id="mgc_acct_chart_menu" name="Source References"
+                  parent="mgc_acct_chart_root"/>
+        <menuitem id="acct_source_list_menu" name="Account Source"
+                  parent="mgc_acct_chart_menu" action="acct_source_list_action" sequence="1"/>
+        <menuitem id="bu_list_menu" name="Business Units"
+                  parent="mgc_acct_chart_menu" action="bu_list_action" sequence="2"/>
+        <menuitem id="loc_list_menu" name="Locations"
+                  parent="mgc_acct_chart_menu" action="loc_list_action" sequence="3"/>
+        <menuitem id="bd_list_menu" name="Branches/Departments"
+                  parent="mgc_acct_chart_menu" action="bd_list_action" sequence="4"/>
+        <menuitem id="bt_list_acct_menu" name="Business Types"
+                  parent="mgc_acct_chart_menu" action="bt_list_action" sequence="5"/>
+        <menuitem id="cen_list_menu" name="Center (for MSG)"
+                  parent="mgc_acct_chart_menu" action="cen_list_action" sequence="6"/>
+
+        <menuitem id="mgc_acct_chart_fs_menu" name="Financial References"
+                  parent="mgc_acct_chart_root"/>
+        <menuitem id="acct_fs_list_menu" name="Account FS Class"
+                  parent="mgc_acct_chart_fs_menu" action="acct_fs_list_action" sequence="1"/>
+        <menuitem id="fs_list_menu" name="FS Class"
+                  parent="mgc_acct_chart_fs_menu" action="fs_list_action" sequence="2"/>
+        <menuitem id="sub_list_menu" name="FS Sub-class"
+                  parent="mgc_acct_chart_fs_menu" action="sub_list_action" sequence="3"/>
+        <menuitem id="spec_list_menu" name="Specifics"
+                  parent="mgc_acct_chart_fs_menu" action="spec_list_action" sequence="4"/>                    
+
+	</data>
+</odoo>
