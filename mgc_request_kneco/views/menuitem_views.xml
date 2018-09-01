@@ -3,7 +3,7 @@
     <data>
         <!-- This Menu Item is Root -->
         <menuitem id="account_request_management_root"
-                  name="Requests_KNeCo"
+                  name="MGC Requests"
                   web_icon="mgc_request_kneco,static/description/icon.png"
                   groups="base.group_user"/>
 
@@ -116,5 +116,9 @@
                   name="Position" parent="account_request_configuration_menu"
                   action="account_request_position_action_view" sequence="4"
                   groups="mgc_request_kneco.group_request_manager"/>
+        <menuitem id="mgc_coa_list_menu"
+                  name="Chart of Account" parent="account_request_configuration_menu"
+                  action="mgc_coa_list_action_view" sequence="5"
+                  groups="mgc_request_kneco.group_request_manager"/>          
     </data>
 </odoo>

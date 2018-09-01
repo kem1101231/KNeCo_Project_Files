@@ -60,7 +60,6 @@ class RequestForm(models.Model):
     name = fields.Char(string="Name", required=False)
 
     curre_user = fields.Many2one('res.users', 'Current User', default=lambda self: self.env.user)
-
     request_number = fields.Char(string="Request Number", required=False, )
     employee_id = fields.Many2one(comodel_name="hr.employee", string="Requestor", required=True,
                                   default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.user.id)], limit=1))
@@ -140,6 +139,7 @@ class RequestForm(models.Model):
                 'position_id': record.position_id.id,
                 'priority': record.priority
             })
+
 
         return result
 
