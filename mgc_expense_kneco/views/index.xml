@@ -76,7 +76,9 @@
                                         <field name="department"/>
                                     </group>
                                     <group>
-                                        <field name="expense_type"/>
+                                        <field name="request_ref_type" invisible="1"/>
+                                        <field name="request_ref_type_name" string="Reference"/>
+                                        <field name="expense_type" domain="[('fs_class_id', '=', request_ref_type)]"/>
                                         <field name="purpose"/>
                                         <field name="is_efo" attrs="{'invisible': [('is_efo', '=', None)]}"/>
                                         <field name="is_shared"/>
@@ -188,7 +190,7 @@
                                     <group>
                                         
                                         
-                                        <field name="check_date"/>
+                                        <field name="check_date" options="{'datepicker':{'minDate': 0}}"/>
                                         <field name="account_number" string="Account Name"/>
                                         <field name="bank_account"/>
                                         <field name="bank_source"/>

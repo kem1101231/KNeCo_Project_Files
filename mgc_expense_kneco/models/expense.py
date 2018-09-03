@@ -1,5 +1,5 @@
 from odoo import api, models, fields
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from odoo.exceptions import ValidationError, UserError
 
 
@@ -25,6 +25,8 @@ class MGC_Expense(models.Model):
     approve_status = fields.Boolean(string="Approval Status")
 
     request_reference = fields.Many2one('account.request', store=True,string="Request Reference", required=True)
+    request_ref_type_name = fields.Char(related="request_reference.request_type_line_id.fs_class_id.name",string="Request Reference Type Name")
+    request_ref_type = fields.Integer(string="Request Reference Type")
     request_bu_id = fields.Char(related="request_reference.company_id.name", string="Business Unit")
     department = fields.Char(related="request_reference.department_id.name", string="Department")
     request_type = fields.Char(related="request_reference.request_type_id.name", string="Request Type")
@@ -47,6 +49,8 @@ class MGC_Expense(models.Model):
             purString = purString + self.request_reference.purpose
 
             self.purpose = purString
+
+            self.request_ref_type = self.request_reference.request_type_line_id.fs_class_id.id
             
             sequence = self.search_count([('id', '!=', '0')])
             years = date.strftime(date.today(), '%y')
@@ -99,6 +103,7 @@ class MGC_ExpenseChecks(models.Model):
             if(amountLimit <= 0):
                 
                 self.expense_id = None
+                self.amount = 0
 
                 warning = {  'title': 'Invalid Expense as Reference', 'message' : 'Expense has been reffered to checks with the total amount equal to the expense cost. Expense is no longer available for reference.'}
                 
@@ -107,6 +112,20 @@ class MGC_ExpenseChecks(models.Model):
             else:
                 self.amount = amountLimit 
     
+    @api.onchange('check_date')
+    def _onchange_check_date(self):
+    	if self.check_date:
+    		dateList = str(self.check_date).split('-')
+    		selDate = datetime(int(dateList[0]),int(dateList[1]),int(dateList[2]))
+
+    		if(selDate <= datetime.now() - timedelta(days=1)):
+    			self.check_date = None
+    			warning = {  'title': 'Invalid Date', 'message' : 'Date later that the current date is not allowed for selection'}
+    			
+    			return {'warning': warning}
+
+
+
     @api.multi
     def reconcile_check(self):
 
@@ -114,8 +133,17 @@ class MGC_ExpenseChecks(models.Model):
     	self.write({'recon_date': str(datetime.now())})
 
     	return True
-    	                 
-    
+
+    @api.depends('amount')
+    def change_amount(self):
+    	print(self.amount)
+    	for request in self:
+    		print(request)
+    	'''
+    	if self.amount:
+    		    		if(self.amount > self.amountLimit):
+    			warning = {  'title': 'Invalid Expense as Reference', 'message' : 'Expense has been reffered to checks with the total amount equal to the expense cost. Expense is no longer available for reference.'}
+		'''
 
 class MGC_ExpenseAccounts(models.Model):
     _name = 'mgc.expense.accounts'

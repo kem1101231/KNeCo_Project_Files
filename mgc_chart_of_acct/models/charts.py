@@ -8,8 +8,18 @@ class BU_Chart_Of_Accounts(models.Model):
 	loc_id = fields.Many2one('mgc.acct_chart.acct_location', string="Account Location")
 	fs_id = fields.Many2one('mgc.acct_chart.acct_finance',string="FS Class")
 
+	loc_name= fields.Char(related="loc_id.name", string="Location Description")
 	loc_bu = fields.Char(related="loc_id.bu_id.name",string="Business Unit")
 	loc_bu_name = fields.Char(related="loc_id.bu_id.bu_id.name",string="Business Unit")
+	loc_area = fields.Char(related="loc_id.loc_id.name", string="Location")
+	bd_name = fields.Char(related="loc_id.bd_id.name", string="Branch")
+	bt_name = fields.Char(related="loc_id.bt_id.name", string="Business Type")
+	cen_name = fields.Char(related="loc_id.cen_id.name",string="Center")
+
+	fs_class_name = fields.Char(related="fs_id.name",string="FS Description")
+	fs_class_id_name = fields.Char(related="fs_id.fs_class_id.name", string="FS Class")
+	sub_class_id_name = fields.Char(related="fs_id.sub_class_id.name", string="Sub Class")
+	spec_id_name = fields.Char(related="fs_id.spec_id.name", string="Specific")
 
 	@api.onchange('loc_id')
 	def _onchange_loc_id(self):

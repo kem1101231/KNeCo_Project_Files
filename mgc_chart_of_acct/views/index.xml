@@ -5,19 +5,30 @@
         <!--  ========================================================================================================================== -->
 
 
-        <record id="view_your_model_name_tree" model="ir.ui.view">
+        <record id="chart_acct_view" model="ir.ui.view">
             <field name="name">Chart of Accounts</field>
             <field name="model">mgc.account_chart.bu</field>
             <field name="arch" type="xml">
                 <tree string="name">
-                                <field name="name"/>
-                                <field name="loc_bu_name" />
-                                <field name="loc_id" />
-                                <field name="fs_id"/>
+                        <field name="name"/>
+                        <field name="loc_bu_name" />
+                        <field name="loc_id" />
+                        <field name="fs_id"/>
                 </tree>
             </field>
         </record>
-        <record id="view_your_model_name_tree" model="ir.ui.view">
+        <record id="acct_loc_chart_view" model="ir.ui.view">
+            <field name="name">Account Sources</field>
+            <field name="model">mgc.acct_chart.acct_location</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                        <field name="acct_loc_id"/>
+                        <field name="name"/>
+                        <field name="bu_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="bu_chart_view" model="ir.ui.view">
             <field name="name">Business Units</field>
             <field name="model">mgc.coa_legend.bu_chart</field>
             <field name="arch" type="xml">
@@ -28,7 +39,7 @@
                 </tree>
             </field>
         </record>
-        <record id="view_your_model_name_tree" model="ir.ui.view">
+        <record id="loc_chart_view" model="ir.ui.view">
             <field name="name">Location</field>
             <field name="model">mgc.coa_legend.loc_chart</field>
             <field name="arch" type="xml">
@@ -39,8 +50,78 @@
                 </tree>
             </field>
         </record>
+        <record id="loc_chart_view" model="ir.ui.view">
+            <field name="name">Branches</field>
+            <field name="model">mgc.coa_legend.bd_chart</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                        <field name="idcode"/>
+                        <field name="name"/>
+                        <field name="bu_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="loc_chart_view" model="ir.ui.view">
+            <field name="name">Business Type</field>
+            <field name="model">mgc.coa_legend.bt_chart</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                        <field name="idcode"/>
+                        <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="loc_chart_view" model="ir.ui.view">
+            <field name="name">Center</field>
+            <field name="model">mgc.coa_legend.center_chart</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                        <field name="idcode"/>
+                        <field name="name"/>
+                </tree>
+            </field>
+        </record>        
 
         <!--  ========================================================================================================================== -->
+
+            <record model="ir.ui.view" id="acct_chart_form">
+                <field name="name">acct_chart_form</field>
+                <field name="model">mgc.account_chart.bu</field>
+                <field name="arch" type="xml">
+                     <form>
+                        <sheet>
+                            <div class="oe_title" >
+                                    <label for="name" />
+                                    <h1>
+                                        <field name="name"  placeholder="Provide the expense id"/>
+                                    </h1>
+                                </div>
+                                <group>
+                                      <group string="Account Source Location">
+                            </group>
+                            <group string="Account Finance Description">
+                            </group>
+                            <group>
+                                <field name="loc_id"/>
+                                <field name="loc_area"/>
+                                <field name="loc_bu_name"/>
+                                <field name="bd_name"/>
+                                <field name="bt_name"/>
+                                <field name="cen_name"/>
+                                
+                            </group>
+                            <group>
+                                <field name="fs_id"/>
+                                <field name="fs_class_id_name"/>
+                                <field name="sub_class_id_name"/>
+                                <field name="spec_id_name"/>
+                            </group>
+                                </group>
+                          
+                        </sheet>
+                     </form>
+                </field>
+            </record>
 
             <record model="ir.ui.view" id="bu_chart_form">
                 <field name="name">bu_chart_form</field>
