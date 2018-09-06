@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report 
+            id="action_report_salesperson"
+            model="report.mgc_expense_kneco.expense_check_form"
+            string="Check Test"
+            report_type="qweb-pdf"
+            name="mgc_expense_kneco.expense_check_form"
+            file="mgc_expense_kneco.expense_check_form"
+            />
+    </data>
+</odoo>

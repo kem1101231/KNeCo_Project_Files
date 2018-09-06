@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="expense_check_form">
+    <t t-call="report.html_container">
+      
+                <div class="page">
+                    <h2>Check Information</h2>
+                    <p>Number: <span t-esc="dataInput['number']"/></p>
+                    <p>Amount: <span t-esc="dataInput['amount']"/></p>
+                    <p>Date: <span t-esc="dataInput['check_date']"/></p>
+                    <p>Bank: <span t-esc="dataInput['bank']"/></p>
+                    <p>Account: <span t-esc="dataInput['account']"/></p>
+                </div>
+        
+    </t>
+</template>
+</odoo>
