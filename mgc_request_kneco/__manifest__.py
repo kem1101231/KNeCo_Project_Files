@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "MGC-Request KNeCo-Draft",
+    'name': "MGC Request",
 
     'summary': """
-        MGC Requests - KNeCo Test""",
+        Short (1 phrase/line) summary of the module's purpose, used as
+        subtitle on modules listing or apps.openerp.com""",
 
     'description': """
-        A Request for the needs of the company
+        Long description of module's purpose
     """,
 
-    'author': "MSG-MIS KNeCo",
-    'website': "http://www.mutigroup.com",
+    'author': "MGC-MIS (KNeCo)",
+    'website': "http://www.yourcompany.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
@@ -19,35 +20,22 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'hr', 'account', 'stock', 'purchase'],
+    'depends': ['base'],
 
     # always loaded
     'data': [
-        'security/request_security.xml',
-        'security/ir.model.access.csv',
-
-        'data/ir_sequence.xml',
-
-        'views/request_views.xml',
-        'views/purchase_views.xml',
-        'views/request_config_views.xml',
-
-        'report/report_request_views.xml',
-
-        'report/template/report_request.xml',
-        'report/template/request_footer.xml',
-        'report/template/all_request_report.xml',
-        'report/template/report_request_template.xml',
-
-        'views/menuitem_views.xml',
+        # 'security/ir.model.access.csv',
+        'views/index.xml',
+        'views/views.xml',
+        'views/templates.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
+        'demo/demo.xml',
     ],
     'images': [
         'static/description/icon.png',
     ],
     'installable': True,
-    'auto_install': False,
     'application': True,
 }

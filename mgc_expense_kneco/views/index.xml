@@ -178,8 +178,11 @@
                      <form>
                             
                             <sheet>
+                                <label for="reconcile_check"/>
                                 <button name="reconcile_check" type="object" class="oe_highlight oe_right oe_read_only" string="Reconcile" confirm="Would you like to reconcile the check?" attrs="{'invisible': [('recon_status', '=', True)]}"/>
-                                 <!--<button name="render_html" class="oe_highlight oe_right oe_read_only" string="Print" attrs="{'invisible': [('recon_status', '=', None)]}"/>-->
+                                 <button style="margin-right:10px" name="print_check" type="object" class="oe_highlight oe_right oe_read_only" string="Print Check"/>
+
+
                                  <div class="oe_title" style="margin-bottom: 23px;">
                                     <label for="name"/>
                                     <h1>
@@ -187,24 +190,22 @@
                                     </h1>
                                 </div>
                                 <group>
-                                    <group>
-                                        
-                                        
-                                        <field name="check_date" options="{'datepicker':{'minDate': 0}}"/>
-                                        <field name="account_number" string="Account Name"/>
-                                        <field name="bank_account"/>
-                                        <field name="bank_source"/>
-                                        <field name="amount" />
-                                        
-                                        
-                                    </group>
+                                    
                                     <group>
                                         <field name="expense_id"/>
+                                        <field name="expense_bu" invisible="1"/>
                                         <field name="purpose"/>
                                         <field name="bu_source"/>
                                         
                                         <field class="oe_read_only" name="recon_status" />
                                         <field class="oe_read_only" name="recon_date" />
+                                    </group>
+                                    <group>
+                                        <field name="check_date" options="{'datepicker':{'minDate': 0}}"/>
+                                        <field name="account_number" string="Account Name" domain="[('bu_id', '=', expense_bu)]"/>
+                                        <field name="bank_account"/>
+                                        <field name="bank_source"/>
+                                        <field name="amount" />
                                     </group>
                                     
                                 </group>

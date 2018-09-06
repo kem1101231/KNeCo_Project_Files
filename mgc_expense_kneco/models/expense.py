@@ -89,6 +89,7 @@ class MGC_ExpenseChecks(models.Model):
     recon_date = fields.Date(string="Reconcilation Date")
     amount = fields.Float(string="Amount", required=True)
     expense_id = fields.Many2one('mgc.expense.base',string="For Expense", ondelete="cascade", required=True)
+    expense_bu = fields.Many2one(related='expense_id.bu_id', string="")
     purpose = fields.Text(related="expense_id.purpose", string="Purpose")
 
     amountLimit = 0
@@ -105,8 +106,7 @@ class MGC_ExpenseChecks(models.Model):
                 self.expense_id = None
                 self.amount = 0
 
-                warning = {  'title': 'Invalid Expense as Reference', 'message' : 'Expense has been reffered to checks with the total amount equal to the expense cost. Expense is no longer available for reference.'}
-                
+                warning = {  'title': 'Invalid Expense as Reference', 'message' : 'Expense has been reffered to checks with the total amount equal to the expense cost. Expense is no longer available for reference.'}                
                 return {'warning': warning}
 
             else:
@@ -124,7 +124,18 @@ class MGC_ExpenseChecks(models.Model):
     			
     			return {'warning': warning}
 
+    @api.multi
+    def print_check(self):
 
+        data = {'data':{'number':self.name,
+                        'check_date':self.check_date,
+                        'bank':self.bank_source,
+                        'account':self.bank_account,
+                        'amount':self.amount,
+                        }
+                }
+        out = self.env['report'].get_action(self, 'mgc_expense_kneco.expense_check_form', data=data)
+        return out
 
     @api.multi
     def reconcile_check(self):
@@ -145,6 +156,7 @@ class MGC_ExpenseChecks(models.Model):
     			warning = {  'title': 'Invalid Expense as Reference', 'message' : 'Expense has been reffered to checks with the total amount equal to the expense cost. Expense is no longer available for reference.'}
 		'''
 
+
 class MGC_ExpenseAccounts(models.Model):
     _name = 'mgc.expense.accounts'
 
@@ -163,26 +175,31 @@ class MGC_ExpenseBusinessUnit(models.Model):
 class MGC_ExpenseBankAccounts(models.Model):
     _name = 'mgc.expense.bank_accounts'
 
-    account_number = fields.Char(string="Account Number")
+    account_number = fields.Char(string="Account Number", required=True)
     name = fields.Char(string="Account Name")
-    bu_id = fields.Many2one('mgc.expense.bu', string="Business Unit", ondelete="cascade")
+    #bu_id = fields.Many2one('mgc.expense.bu', string="Business Unit", ondelete="cascade", required=True)
+    bu_id = fields.Many2one('res.company',string="Business Unit", ondelete="cascade", required=True)
     #bu_source = fields.Char(related="bu_id.name", string="Business Unit")
-    bank_id = fields.Many2one('mgc.expense.banks', string="Bank", ondelete="cascade")
-    #bank_source = fields.Char(related="bank_id.name", string="Business Unit")
-    cash_on_bank = fields.Float(string="Cash in Bank")
+    bank_id = fields.Many2one('mgc.expense.banks', string="Bank", ondelete="cascade", required=True)
+    cash_on_bank = fields.Float(string="Cash in Bank", required=True)
     check_ids = fields.One2many('mgc.expense.checks','account_number',string="Prepared Checks")
 
-class CustomReport(models.AbstractModel):
-      _name = 'report.mgc_expense_kneco.report_fleet_job_card'
+    nameList = "*/-/*/-/*".split('/')
 
-      @api.model
-      def render_html(self, docids, data=None):
-        report_obj = self.env['report']
-        report = report_obj._get_report_from_name('mgc_expense_kneco.report_fleet_job_card')
-        fleet_args = {
-            'doc_ids': docids,
-            'doc_model': report.fleet_repair,
-            'docs': self,
-        }
-        return report_obj.render('mgc_expense_kneco.report_fleet_job_card', fleet_args)
- 
+    @api.onchange('bu_id')
+    def _onchange_bu_id(self):
+        if self.bu_id:
+            self.nameList[0] = self.bu_id.partner_id.abbreviation
+            self.name = "".join(self.nameList)
+
+    @api.onchange('bank_id')
+    def _onchange_bank_id(self):
+        if self.bank_id:
+            self.nameList[2] = self.bank_id.name
+            self.name = "".join(self.nameList)
+    
+    @api.onchange('account_number')
+    def _onchange_account_number(self):
+        if self.account_number:
+            self.nameList[4] = self.account_number
+            self.name = "".join(self.nameList)

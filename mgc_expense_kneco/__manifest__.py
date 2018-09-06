@@ -29,12 +29,8 @@
         #'views/views.xml',
         #'views/templates.xml',
         'views/index.xml',
-        #'views/check_form.xml',
-        #'views/check_record.xml',
-    ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
+        'views/expense_check_form.xml',
+        'views/expense_check_base.xml',
     ],
     'images': [
         'static/description/icon.png',
