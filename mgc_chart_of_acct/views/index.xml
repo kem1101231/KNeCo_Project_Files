@@ -279,7 +279,7 @@
 
 		<menuitem id="mgc_acct_chart_root" 
 		   			 name="MGC COA" 
-		   			 web_icon="mgc_expense_kneco,static/description/icon.png"/>
+		   			 web_icon="mgc_chart_of_acct,static/description/icon.png"/>
         <!-- A first level in the left side menu is needed
              before using action= attribute -->
 
