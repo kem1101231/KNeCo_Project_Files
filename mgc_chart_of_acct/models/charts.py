@@ -271,18 +271,54 @@ class FS_Class_Chart(models.Model):
 
 	idcode = fields.Char(string="FS-class Code")
 	name = fields.Char(string="FS-class Name")
-	sub_class_list = fields.One2many('mgc.coa_legend.sub_class_chart','fs_id',string="Sub Class List") 
+	#sub_class_list = fields.One2many('mgc.coa_legend.sub_class_chart','fs_id',string="Sub Class List") 
+	
+	@api.onchange('idcode')
+	def _onchange_idcode(self):
+		if self.idcode:
+			
+			zeroLength = 2 - len(self.idcode)
+			idcodeTemp = self.idcode
+			
+			for x in range(0, zeroLength):
+				idcodeTemp = '0' + idcodeTemp
+
+			self.idcode = idcodeTemp	
 
 class Sub_Class_Chart(models.Model):
 	_name = 'mgc.coa_legend.sub_class_chart'
 	
 	idcode = fields.Char(string="Sub-class Code")
 	name = fields.Char(string="Sub-class Name")
-	fs_id = fields.Many2one('mgc.coa_legend.fs_class_chart', srting="FS Class")
+	#fs_id = fields.Many2one('mgc.coa_legend.fs_class_chart', srting="FS Class")
+
+	@api.onchange('idcode')
+	def _onchange_idcode(self):
+		if self.idcode:
+			
+			zeroLength = 3 - len(self.idcode)
+			idcodeTemp = self.idcode
+			
+			for x in range(0, zeroLength):
+				idcodeTemp = '0' + idcodeTemp
+
+			self.idcode = idcodeTemp	
 
 class Specifics_Chart(models.Model):
 	_name = 'mgc.coa_legend.specific'
 
 	idcode = fields.Char(string="Specific Code")
 	name = fields.Char(string="Specific Name")
-	sub_class = fields.Many2one('mgc.coa_legend.sub_class_chart', string="FS Sub Class")
+	#sub_class = fields.Many2one('mgc.coa_legend.sub_class_chart', string="FS Sub Class")
+
+	@api.onchange('idcode')
+	def _onchange_idcode(self):
+		if self.idcode:
+			
+			zeroLength = 2 - len(self.idcode)
+			idcodeTemp = self.idcode
+			
+			for x in range(0, zeroLength):
+				idcodeTemp = '0' + idcodeTemp
+
+			self.idcode = idcodeTemp	

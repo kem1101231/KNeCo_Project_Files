@@ -80,7 +80,62 @@
                         <field name="name"/>
                 </tree>
             </field>
-        </record>        
+        </record>
+
+     <!--  ========================================================================================================================== -->
+        
+        <record id="chart_acct_view" model="ir.ui.view">
+            <field name="name">Financial Statement</field>
+            <field name="model">mgc.acct_chart.acct_finance</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                        
+                        <field name="acct_fs_id"/>
+                        <field name="name"/>
+                        <field name="fs_class_id"/>
+                        <field name="sub_class_id"/>
+                        <field name="spec_id"/>
+                </tree>
+            </field>
+        </record>  
+
+        <record id="fs_class_chart_acct_view" model="ir.ui.view">
+            <field name="name">Financial Statement Class</field>
+            <field name="model">mgc.coa_legend.fs_class_chart</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                        
+                        <field name="idcode"/>
+                        <field name="name"/>
+                </tree>        
+            </field>
+        </record> 
+ 
+        
+        <record id="sub_class_chart_acct_view" model="ir.ui.view">
+            <field name="name">Financial Statement Sub Class</field>
+            <field name="model">mgc.coa_legend.sub_class_chart</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                        
+                        <field name="idcode"/>
+                        <field name="name"/>
+                </tree>
+            </field>
+        </record>  
+        
+        <record id="fs_spec_chart_acct_view" model="ir.ui.view">
+            <field name="name">Financial Statement specifics</field>
+            <field name="model">mgc.coa_legend.specific</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                        
+                        <field name="idcode"/>
+                        <field name="name"/>
+                </tree>
+            </field>
+        </record>  
+      
 
         <!--  ========================================================================================================================== -->
 
@@ -158,7 +213,75 @@
 
 
         <!--  ========================================================================================================================== -->
+             <record model="ir.ui.view" id="fs)acct_chart_form">
+                            <field name="name">fs_acct_chart_form</field>
+                            <field name="model">mgc.acct_chart.acct_finance</field>
+                            <field name="arch" type="xml">
+                                 <form>
+                                    <sheet>
+                                        <div class="oe_title" style="margin-bottom:35px;">
+                                                <label for="acct_fs_id" />
+                                                <h1>
+                                                    <field name="acct_fs_id"  placeholder="Provide the expense id"/>
+                                                </h1>
+                                            </div>
+                                            <group>
+                                            <field name="name"/>
+                                            <field name="fs_class_id"/>
+                                            <field name="sub_class_id"/>
+                                            <field name="spec_id"/>
+                                            </group>
+                                      
+                                    </sheet>
+                                 </form>
+                            </field>
+                        </record>
 
+               <record model="ir.ui.view" id="fs_class_acct_chart_form">
+                            <field name="name">fs_class_acct_chart_form</field>
+                            <field name="model">mgc.coa_legend.fs_class_chart</field>
+                            <field name="arch" type="xml">
+                                 <form>
+                                    <sheet>
+                                            <group>
+                                            <field name="idcode"/>
+                                            <field name="name"/>
+                                            </group>
+                                      
+                                    </sheet>
+                                 </form>
+                            </field>
+            </record>
+            <record model="ir.ui.view" id="sub_class_acct_chart_form">
+                            <field name="name">sub_class_acct_chart_form</field>
+                            <field name="model">mgc.coa_legend.sub_class_chart</field>
+                            <field name="arch" type="xml">
+                                 <form>
+                                    <sheet>
+                                            <group>
+                                            <field name="idcode"/>
+                                            <field name="name"/>
+                                            </group>
+                                      
+                                    </sheet>
+                                 </form>
+                            </field>
+            </record>  
+            <record model="ir.ui.view" id="spec_acct_chart_form">
+                            <field name="name">spec_acct_chart_form</field>
+                            <field name="model">mgc.coa_legend.specific</field>
+                            <field name="arch" type="xml">
+                                 <form>
+                                    <sheet>
+                                            <group>
+                                            <field name="idcode"/>
+                                            <field name="name"/>
+                                            </group>
+                                      
+                                    </sheet>
+                                 </form>
+                            </field>
+            </record>       
         <!--  ========================================================================================================================== -->
 
 		<record model="ir.actions.act_window" id="coa_list_action">
