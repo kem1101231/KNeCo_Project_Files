@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_mgc_request_kneco_draft_mgc_request_kneco_draft,mgc_request_kneco_draft.mgc_request_kneco_draft,model_mgc_request_kneco_draft_mgc_request_kneco_draft,,1,0,0,0
+access_mgc_request_kneco_mgc_request_kneco,mgc_request_kneco.mgc_request_kneco,model_mgc_request_kneco_mgc_request_kneco,,1,0,0,0

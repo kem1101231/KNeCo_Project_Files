@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "MGC Request",
+    'name': "mgc_request_kneco",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
@@ -10,7 +10,7 @@
         Long description of module's purpose
     """,
 
-    'author': "MGC-MIS (KNeCo)",
+    'author': "My Company",
     'website': "http://www.yourcompany.com",
 
     # Categories can be used to filter modules in modules listing
@@ -25,7 +25,6 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/index.xml',
         'views/views.xml',
         'views/templates.xml',
     ],
@@ -33,9 +32,4 @@
     'demo': [
         'demo/demo.xml',
     ],
-    'images': [
-        'static/description/icon.png',
-    ],
-    'installable': True,
-    'application': True,
 }
