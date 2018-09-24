@@ -1,0 +1,32 @@
+<odoo>
+  
+    <data>
+
+        <record id="account_request_action_view" model="ir.actions.act_window">
+            <field name="name">Requests</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mgc.request.form.base</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_type">form</field>
+            <!--<field name="domain">[('employee_id.user_id','=',uid)]</field>-->
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Make your own request!
+              </p>
+            </field>
+        </record>
+
+
+        <menuitem id="mgc_request_form_root"
+                  name="MGC Request"
+                  web_icon="mgc_request_kneco,static/description/icon.png"
+                 />
+
+
+        <menuitem id="mgc_request_form_menu_my_request"
+                  name="Requests" parent="mgc_request_kneco.mgc_request_form_root"
+                  action="account_request_action_view" 
+                 />
+
+    </data>
+</odoo>

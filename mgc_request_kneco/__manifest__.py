@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "mgc_request_kneco",
+    'name': "MGC Project Request",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        """,
 
     'description': """
-        Long description of module's purpose
+        Request Alternative
     """,
 
-    'author': "My Company",
+    'author': "MIS",
     'website': "http://www.yourcompany.com",
 
     # Categories can be used to filter modules in modules listing
@@ -27,9 +26,16 @@
         # 'security/ir.model.access.csv',
         'views/views.xml',
         'views/templates.xml',
+        'views/index.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
     ],
+    'images': [
+        'static/description/icon.png',
+    ],
+    'installable': True,
+    'auto_install': False,
+    'application': True,
 }
