@@ -2,6 +2,51 @@
   
     <data>
 
+        <record model="ir.ui.view" id="add_form">
+
+                <field name="name">course_form</field>
+                <field name="model"mgc.request.form.base</field>
+                <field name="arch" type="xml">
+
+                     <form>
+                            <!--<header> ... content of the status bar  ... </header>-->
+                            <sheet>
+                                 <div class="oe_title" style="margin-bottom: 10px;" >
+                                    <label for="name" class="oe_read_only"/>
+                                    <h1>
+                                        <field name="name" class="oe_read_only" placeholder="Provide the expense id"/>
+                                    </h1>
+                                </div>
+
+
+                                <group>
+                                    <group string="Requestor">
+                                    </group>
+                                    <group string="Expense Details">
+                                    </group>
+                                    <group>
+                                        <field name="requestor_id"/>
+                                        <field name="request_department"/>
+                                        <field name="request_company"/>
+                                        <field name="request_purpose"/>
+                                        <field name="request_special_instruction"/>
+                                    </group>
+                                    <group>
+                                       
+                                    </group>
+                                    
+                                </group>
+                                <notebook class="oe_read_only">
+                                        <page string="Included Items to Request">
+                                            <field name="request_line_ids"/>
+                                        </page>
+                                </notebook>
+                            </sheet>
+                     </form>
+                </field>
+            </record>
+
+
         <record id="account_request_action_view" model="ir.actions.act_window">
             <field name="name">Requests</field>
             <field name="type">ir.actions.act_window</field>
