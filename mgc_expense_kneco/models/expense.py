@@ -25,8 +25,8 @@ class MGC_Expense(models.Model):
     approve_status = fields.Boolean(string="Approval Status")
 
     request_reference = fields.Many2one('account.request', store=True,string="Request Reference", required=True)
-    request_ref_type_name = fields.Char(related="request_reference.request_type_line_id.fs_class_id.name",string="Request Reference Type Name")
-    request_ref_type = fields.Integer(string="Request Reference Type")
+    #request_ref_type_name = fields.Char(related="request_reference.request_type_line_id.fs_class_id.name",string="Request Reference Type Name")
+    request_ref_type = fields.Many2one('mgc.coa_legend.fs_class_chart', string="Reference Type",store=False, required=True)
     request_bu_id = fields.Char(related="request_reference.company_id.name", string="Business Unit")
     department = fields.Char(related="request_reference.department_id.name", string="Department")
     request_type = fields.Char(related="request_reference.request_type_id.name", string="Request Type")

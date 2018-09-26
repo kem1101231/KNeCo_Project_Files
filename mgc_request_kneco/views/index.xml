@@ -1,31 +1,46 @@
 <odoo>
-  
-    <data>
 
+    <data>
+      <record id="view_your_model_name_tree" model="ir.ui.view">
+            <field name="name">Checks_tree</field>
+            <field name="model">mgc.request.form.line</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                                <field name="product_id"/>
+                                <field name="description"/>
+                                <field name="unit"/>
+                                <field name="unit_cost"/>
+                                <field name="quantity"/>
+                                <field name="tax_rate"/>
+                                <field name="subtotal"/>
+
+                </tree>
+            </field>
+        </record>
+<!-- ====================================================================================================================================== -->
         <record model="ir.ui.view" id="add_form">
 
                 <field name="name">course_form</field>
-                <field name="model"mgc.request.form.base</field>
+                <field name="model">mgc.request.form.base</field>
                 <field name="arch" type="xml">
 
                      <form>
                             <!--<header> ... content of the status bar  ... </header>-->
                             <sheet>
-                                 <div class="oe_title" style="margin-bottom: 10px;" >
-                                    <label for="name" class="oe_read_only"/>
+                                 <div class="oe_title" style="margin-bottom: 10px;">
+                                    <label for="name"/>
                                     <h1>
                                         <field name="name" class="oe_read_only" placeholder="Provide the expense id"/>
                                     </h1>
                                 </div>
 
-
                                 <group>
                                     <group string="Requestor">
                                     </group>
-                                    <group string="Expense Details">
+                                    <group string="Request Details">
                                     </group>
                                     <group>
-                                        <field name="requestor_id"/>
+                                        <field name="requestor_id" widget="selection" editable="False"  options="{'no_create':True}"/>
                                         <field name="request_department"/>
                                         <field name="request_company"/>
                                         <field name="request_purpose"/>
@@ -36,9 +51,19 @@
                                     </group>
                                     
                                 </group>
-                                <notebook class="oe_read_only">
+                                <notebook >
                                         <page string="Included Items to Request">
-                                            <field name="request_line_ids"/>
+                                            <field name="request_line_ids" nolabel="1" mode="tree">
+                                              <tree string="Request Line" editable="top">
+                                                <field name="product_id"/>
+                                                <field name="description"/>
+                                                <field name="unit"/>
+                                                <field name="unit_cost"/>
+                                                <field name="quantity"/>
+                                                <field name="tax_rate"/>
+                                                <field name="subtotal"/>
+                                              </tree>
+                                            </field>
                                         </page>
                                 </notebook>
                             </sheet>
@@ -46,6 +71,30 @@
                 </field>
             </record>
 
+            <!-- <record model="ir.ui.view" id="add_items_form">
+
+                <field name="name" >add_items_form</field>
+                <field name="model">mgc.request.form.line</field>
+                <field name="arch" type="xml">
+
+                     <form string="Test">
+                            <sheet>
+                                <group>
+                                        <field name="product_id"/>
+                                        <field name="description"/>
+                                        <field name="unit"/>
+                                        <field name="unit_cost"/>
+                                        <field name="quantity"/>
+                                        <field name="tax_rate"/>
+                                        <field name="subtotal"/>
+                                </group>
+                            </sheet>
+                     </form>
+                </field>
+            </record> -->
+
+
+<!-- ====================================================================================================================================== -->
 
         <record id="account_request_action_view" model="ir.actions.act_window">
             <field name="name">Requests</field>

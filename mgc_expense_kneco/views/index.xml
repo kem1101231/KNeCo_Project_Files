@@ -50,9 +50,9 @@
                 </tree>
             </field>
         </record>
-            <record model="ir.ui.view" id="add_form">
+            <record model="ir.ui.view" id="expense_form">
 
-                <field name="name">course_form</field>
+                <field name="name">expense_form</field>
                 <field name="model">mgc.expense.base</field>
                 <field name="arch" type="xml">
 
@@ -76,9 +76,9 @@
                                         <field name="department"/>
                                     </group>
                                     <group>
-                                        <field name="request_ref_type" invisible="1"/>
-                                        <field name="request_ref_type_name" string="Reference"/>
-                                        <field name="expense_type" domain="[('fs_class_id', '=', request_ref_type)]"/>
+                                        <field name="request_ref_type"/>
+                                        <!--<field name="request_ref_type_name" string="Reference"/>-->
+                                        <field name="expense_type" domain="[('fs_class_id', '=', request_ref_type)]"  attrs="{'invisible': [('request_ref_type', '=', 0)]}"/>
                                         <field name="purpose"/>
                                         <field name="is_efo" attrs="{'invisible': [('is_efo', '=', None)]}"/>
                                         <field name="is_shared"/>
