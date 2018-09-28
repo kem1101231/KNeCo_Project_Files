@@ -71,27 +71,41 @@
                                     <group string="Expense Details">
                                     </group>
                                     <group>
-                                        <field name="request_reference"/>
+                                        <field name="request_reference"  editable="False"  options="{'no_create':True}"/>
                                         <field name="request_bu_id"/>
                                         <field name="department"/>
                                     </group>
                                     <group>
-                                        <field name="request_ref_type"/>
+                                        <field name="request_ref_type"   editable="False"  options="{'no_create':True}"/>
                                         <!--<field name="request_ref_type_name" string="Reference"/>-->
-                                        <field name="expense_type" domain="[('fs_class_id', '=', request_ref_type)]"  attrs="{'invisible': [('request_ref_type', '=', 0)]}"/>
+                                        <field name="expense_type" domain="[('fs_class_id', '=', request_ref_type)]"  attrs="{'invisible': [('request_ref_type', '=', '0')]}"   editable="False"  options="{'no_create':True}"/>
                                         <field name="purpose"/>
-                                        <field name="is_efo" attrs="{'invisible': [('is_efo', '=', None)]}"/>
-                                        <field name="is_shared"/>
                                     </group>
                                     <group>
-                                        <field name="request_type"/>
+                                       <field name="request_type"/>
+                                       <field name="request_type_id_type" invisible="1"/>
                                         <field name="request_name"/>
                                         <field name="request_purpose"/>
                                     </group>
                                     <group>
+                                        <field name="is_efo" attrs="{'invisible': [('is_efo', '=', None)]}"/>
+                                        <field name="is_shared"/>
+                                    </group>
+                                    <group>
+                                        <div attrs="{'invisible': [('request_type_id_type', '!=', 'purchase')]}" >
+                                             <field name="purchase_id_source_type" attrs="{'invisible': [('request_type_id_type', '!=', 'purchase')]}" />
+                                            <field name="purchase_id_ext" attrs="{'invisible': [('purchase_id_source_type', '=', 'internal'),('request_type_id_type', '!=', 'purchase')]}"/>
+                                            <field name="vendor_bill_ext" attrs="{'invisible': [('purchase_id_source_type', '=', 'internal'),('request_type_id_type', '!=', 'purchase')]}"/>
+                                            <field name="purchase_id" attrs="{'invisible': [('purchase_id_source_type', '!=', 'internal'),('request_type_id_type', '!=', 'purchase')]}" options="{'no_create':True}"/>
+                                            <field name="vendor_bill" attrs="{'invisible': [('purchase_id_source_type', '!=', 'internal'),('request_type_id_type', '!=', 'purchase')]}" options="{'no_create':True}"/>
+                                        </div>
+
+                                       
+                                    </group>
+                                    <group>
                                         <field name="bu_id"/>
                                         <field name="amount"/>
-                                        <field name="check_list_amount"/>
+                                        <field name="check_list_amount" class="oe_read_only"/>
                                     </group>
                                 </group>
                                 <notebook class="oe_read_only">
@@ -232,12 +246,10 @@
                                     </h1>
                                 </div>
                                 <group>
-                                    <group>
                                         <field name="account_number"/>
                                         <field name="bank_id"/>
                                         <field name="bu_id"/>
                                         <field name="cash_on_bank"/>
-                                    </group>
                                     
                                 </group>
                                 <notebook class="oe_read_only">

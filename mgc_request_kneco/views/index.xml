@@ -25,7 +25,39 @@
                 <field name="arch" type="xml">
 
                      <form>
-                            <!--<header> ... content of the status bar  ... </header>-->
+                            <header>
+                        <button string="Print RF" name="print_request"
+                                states="draft,confirmed,print_rf,done" type="object"
+                                class="oe_highlight"
+                                groups="mgc_request.group_request_employee,mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
+
+                        <button string="Confirmed" name="action_confirmed"
+                                states="print_rf,draft,void" type="object"
+                                class="oe_highlight"
+                                groups="mgc_request.group_request_supervisor"/>
+
+                        <button string="Done" name="action_done"
+                                states="confirmed" type="object"
+                                class="oe_highlight"
+                                groups="mgc_request.group_request_manager"/>
+
+                        <button string="Cancelled" name="action_cancelled"
+                                states="draft,print_rf,confirmed" type="object"
+                                class="oe_highlight"
+                                groups="mgc_request.group_request_employee,mgc_request.group_request_supervisor,mgc_request.group_request_manager"/>
+
+                        <button string="Set to draft" name="action_retrieve"
+                                states="cancelled" type="object"
+                                class="oe_highlight"
+                                groups="mgc_request.group_request_supervisor"/>
+
+                        <button string="Void" name="action_void"
+                                states="confirmed,done" type="object"
+                                class="oe_highlight"
+                                groups="mgc_request.group_request_manager"/>
+
+                        <field name="state" widget="statusbar" statusbar_visible="draft,print_rf,cancelled,confirmed,done"/>
+                    </header>
                             <sheet>
                                  <div class="oe_title" style="margin-bottom: 10px;">
                                     <label for="name"/>
@@ -40,38 +72,79 @@
                                     <group string="Request Details">
                                     </group>
                                     <group>
-                                        <field name="requestor_id" widget="selection" editable="False"  options="{'no_create':True}"/>
+                                        <field name="requestor_id" editable="False"  options="{'no_create':True}"/>
                                         <field name="request_department"/>
                                         <field name="request_company"/>
+                                    </group>
+                                    <group>
+                                        <field name="request_type"/>
+                                        <field name="request_name"/>
                                         <field name="request_purpose"/>
-                                        <field name="request_special_instruction"/>
+                                    </group>
+                                    <group >
                                     </group>
                                     <group>
                                        
                                     </group>
+
+                                    
+
+                                    <!--
+                                    <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline">
+                                        <label for="amount_total"/>
+                                    </div>
+                                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                     -->
                                     
                                 </group>
+                                 <group class="oe_read_only">
+                                     <group class="oe_subtotal_footer oe_right">
+                                        <div class="oe_title oe_inline">
+                                     <label for="request_total"/>
+                                    <h1>
+                                        <field name="request_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+                                    </h1>
+                                </div>
+                                    </group>
+                                </group>
+
                                 <notebook >
                                         <page string="Included Items to Request">
                                             <field name="request_line_ids" nolabel="1" mode="tree">
+                                                <!--
                                               <tree string="Request Line" editable="top">
                                                 <field name="product_id"/>
                                                 <field name="description"/>
-                                                <field name="unit"/>
+                                                <field name="unit"   options="{'no_create':True}"/>
                                                 <field name="unit_cost"/>
                                                 <field name="quantity"/>
                                                 <field name="tax_rate"/>
                                                 <field name="subtotal"/>
-                                              </tree>
+                                              </tree>-->
                                             </field>
                                         </page>
+
                                 </notebook>
+                                <group>
+                                     <group class="oe_subtotal_footer oe_right">
+                                        <field name="request_total"  class="" widget="monetary"/>
+                                        <field name="request_total"  class="" widget="monetary"/>
+                                        <div class="oe_subtotal_footer_separator oe_inline">
+                                           <label for="request_total"/>
+                                        </div>
+                                        <field name="request_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+
+                                    </group>
+                                </group>
+                                    
                             </sheet>
                      </form>
                 </field>
             </record>
 
-            <!-- <record model="ir.ui.view" id="add_items_form">
+           <record model="ir.ui.view" id="add_items_form">
 
                 <field name="name" >add_items_form</field>
                 <field name="model">mgc.request.form.line</field>
@@ -91,7 +164,7 @@
                             </sheet>
                      </form>
                 </field>
-            </record> -->
+            </record>
 
 
 <!-- ====================================================================================================================================== -->

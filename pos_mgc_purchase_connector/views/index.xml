@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="purchase_order_form_inherit_test" model="ir.ui.view">
+            <field name="name">purchase.order.form.inherit.test</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+            
+                <xpath expr="//field[@name='is_shipped']" position="before">
+                    <field name="mgc_request_id" invisible="1"/>
+                    <field name="mgc_request_number"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

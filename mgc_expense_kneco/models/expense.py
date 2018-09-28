@@ -32,6 +32,16 @@ class MGC_Expense(models.Model):
     request_type = fields.Char(related="request_reference.request_type_id.name", string="Request Type")
     request_name = fields.Char(related="request_reference.request_type_line_id.name", string="Request Name")
     request_purpose = fields.Text(related="request_reference.purpose", string="Request Purpose")
+    request_type_id_type = fields.Char(store=False) 
+
+    purchase_id_source_type = fields.Selection([ ('MUTI_MC', 'MUTI MC'),('MUTI_SP', 'MUTI SP'),('HONDA_MC', 'Honda Soc. MC'),('HONDA_SP', 'Honda Soc. SP'),('internal', 'PPE')],string='Po Source Type', default='internal', store=True)
+
+    purchase_id_ext = fields.Integer(string="Purchase Order")
+    vendor_bill_ext = fields.Integer(string="Vendor Bill")
+
+    purchase_id = fields.Many2one('purchase.order', string="Purchase Order")
+    vendor_bill = fields.Many2one('account.invoice', string="Vendor Bill")
+
 
     bu_id = fields.Many2one('res.company', string="Expense B.U.", required=True)
     purpose = fields.Text(string="Expense Purpose", required=True)
@@ -50,13 +60,21 @@ class MGC_Expense(models.Model):
 
             self.purpose = purString
 
-            self.request_ref_type = self.request_reference.request_type_line_id.fs_class_id.id
+            #self.request_ref_type = self.request_reference.request_type_line_id.fs_class_id.id
+            print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            print(self.request_reference.request_type_id.type)
+            self.request_type_id_type = str(self.request_reference.request_type_id.type)
+
+            if self.request_reference.request_type_id.type == 'cash':
+                self.amount = self.request_reference.amount_total
             
             sequence = self.search_count([('id', '!=', '0')])
             years = date.strftime(date.today(), '%y')
             name = 'E-' + str(years) + '-' + '{:06}'.format(sequence + 1)
             self.name = name
             self.bu_id = self.request_reference.company_id
+
+
 
     @api.constrains('amount')
     def _amount_check(self):
@@ -120,7 +138,7 @@ class MGC_ExpenseChecks(models.Model):
 
     		if(selDate <= datetime.now() - timedelta(days=1)):
     			self.check_date = None
-    			warning = {  'title': 'Invalid Date', 'message' : 'Date later that the current date is not allowed for selection'}
+    			warning = {  'title': 'Invalid Date', 'message' : 'Date later than the current date is not allowed for selection'}
     			
     			return {'warning': warning}
 
@@ -184,8 +202,14 @@ class MGC_ExpenseBankAccounts(models.Model):
     cash_on_bank = fields.Float(string="Cash in Bank", required=True)
     check_ids = fields.One2many('mgc.expense.checks','account_number',string="Prepared Checks")
 
+    '''
+    @api.constrains('cash_on_bank')
+    def _amount_cash_on_bank(self):
+        for record in self:
+            if record.cash_on_bank <= 0:
+                raise ValidationError("Invalid value to cash on bank. Please provide an amount greater than zero.")    
+    '''           
     nameList = "*/-/*/-/*".split('/')
-
     @api.onchange('bu_id')
     def _onchange_bu_id(self):
         if self.bu_id:
@@ -203,3 +227,30 @@ class MGC_ExpenseBankAccounts(models.Model):
         if self.account_number:
             self.nameList[4] = self.account_number
             self.name = "".join(self.nameList)
+    
+
+
+class XMLRPC_Connection:
+    url = ''
+    db = ''
+    uname = ''
+    password = ''
+
+    uid = None
+    model = None
+
+    def __init__(self, url, db, uname, password):
+        
+        self.url = url
+        self.db = db
+        self.uname = uname
+        self.password = password
+
+        common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(self.url))
+
+        self.uid = common.authenticate(self.db, self.uname, self.password, {})
+        self.model = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(self.url))
+
+    def getData(self, model, action, condition, result):
+        return self.model.execute_kw(self.db, self.uid, self.password, model, action, condition, result)
+
