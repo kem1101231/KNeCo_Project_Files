@@ -1,6 +1,33 @@
 from odoo import api, models, fields
 from datetime import datetime, date, timedelta
 from odoo.exceptions import ValidationError, UserError
+import xmlrpclib
+
+class XMLRPC_Connection:
+    url = 'http://192.168.93.3:8069'
+    db = 'HONDA_SP'
+    uname = 'admin'
+    password = 'hondaadminsp'
+
+    uid = None
+    model = None
+    #, url, db, uname, password
+    def __init__(self):
+        
+        '''
+        self.url = url
+        self.db = db
+        self.uname = uname
+        self.password = password
+        '''
+        common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(self.url))
+
+        self.uid = common.authenticate(self.db, self.uname, self.password, {})
+        self.model = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(self.url))
+
+    def getData(self, model, action, condition, result):
+        #print(str(self.url)+ " - " + str(self.db)+ " - " + str(self.uid)+ " - " + str(self.password))
+        return self.model.execute_kw(self.db, self.uid, self.password, model, action, condition, result)
 
 
 class MGC_Expense(models.Model):
@@ -26,7 +53,7 @@ class MGC_Expense(models.Model):
 
     request_reference = fields.Many2one('account.request', store=True,string="Request Reference", required=True)
     #request_ref_type_name = fields.Char(related="request_reference.request_type_line_id.fs_class_id.name",string="Request Reference Type Name")
-    request_ref_type = fields.Many2one('mgc.coa_legend.fs_class_chart', string="Reference Type",store=False, required=True)
+    request_ref_type = fields.Many2one('mgc.coa_legend.fs_class_chart', string="Reference Type",store=True, required=True)
     request_bu_id = fields.Char(related="request_reference.company_id.name", string="Business Unit")
     department = fields.Char(related="request_reference.department_id.name", string="Department")
     request_type = fields.Char(related="request_reference.request_type_id.name", string="Request Type")
@@ -34,10 +61,12 @@ class MGC_Expense(models.Model):
     request_purpose = fields.Text(related="request_reference.purpose", string="Request Purpose")
     request_type_id_type = fields.Char(store=False) 
 
-    purchase_id_source_type = fields.Selection([ ('MUTI_MC', 'MUTI MC'),('MUTI_SP', 'MUTI SP'),('HONDA_MC', 'Honda Soc. MC'),('HONDA_SP', 'Honda Soc. SP'),('internal', 'PPE')],string='Po Source Type', default='internal', store=True)
+    purchase_id_source_type = fields.Selection([('MUTI_MC', 'MUTI MC'),('MUTI_SP', 'MUTI SP'),('HONDA_MC', 'Honda Soc. MC'),('HONDA_SP', 'Honda Soc. SP'),('internal', 'PPE')],string='Po Source Type', default='internal', store=True)
 
-    purchase_id_ext = fields.Integer(string="Purchase Order")
-    vendor_bill_ext = fields.Integer(string="Vendor Bill")
+    purchase_id_ext = fields.Integer(string="Purchase ID")
+    purchase_id_number_ext = fields.Char(string="Purchase Order")
+    vendor_bill_id_ext = fields.Integer(string="Vendor Bill ID")
+    vendor_bill_ext = fields.Char(string="Vendor Bill")
 
     purchase_id = fields.Many2one('purchase.order', string="Purchase Order")
     vendor_bill = fields.Many2one('account.invoice', string="Vendor Bill")
@@ -50,7 +79,13 @@ class MGC_Expense(models.Model):
     prep_id = None #fields.Many2one('res.partner', string="Prepared by",ondelete='cascade')
     date_prep = None #fields.Date(string="Preparation Date")
 
-    
+    ext_Access_Data = {
+                        'MUTI_MC':('MUTI_MC','admin',''),
+                        'MUTI_SP':('MUTI_SP','admin',''),
+                        'HONDA_MC':('HONDA_MC','admin',''),
+                        'HONDA_SP':('HONDA_SP','admin','hondaadminsp'),
+                    }
+
     @api.onchange('request_reference')
     def _onchange_request_reference(self):
         
@@ -61,12 +96,12 @@ class MGC_Expense(models.Model):
             self.purpose = purString
 
             #self.request_ref_type = self.request_reference.request_type_line_id.fs_class_id.id
-            print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-            print(self.request_reference.request_type_id.type)
             self.request_type_id_type = str(self.request_reference.request_type_id.type)
 
             if self.request_reference.request_type_id.type == 'cash':
                 self.amount = self.request_reference.amount_total
+            else:
+                self.amount = 0
             
             sequence = self.search_count([('id', '!=', '0')])
             years = date.strftime(date.today(), '%y')
@@ -74,7 +109,19 @@ class MGC_Expense(models.Model):
             self.name = name
             self.bu_id = self.request_reference.company_id
 
+    @api.onchange('purchase_id_source_type')
+    def _onchange_purchase_id_source_type(self):
+        if self.purchase_id_source_type:
+            pass
 
+    @api.onchange('purchase_id_number_ext')
+    def _onchange_purchase_id_number_ext(self):
+        if self.purchase_id_number_ext:
+            xmlrpc_accessData = self.ext_Access_Data[self.purchase_id_source_type]
+            #print(xmlrpc_accessData)
+            #'http://192.168.93.3:8069', xmlrpc_accessData[0], xmlrpc_accessData[1], xmlrpc_accessData[2]/// [[['mgc_request_id', '=', self.request_reference.id],['name','=', self.purchase_id_number_ext]]]
+            xmlrpcData = XMLRPC_Connection().getData('purchase.order','search', [[[]]], {'fields': ['name','amount_total'], 'limit': 0})
+            print(xmlrpcData)
 
     @api.constrains('amount')
     def _amount_check(self):
@@ -229,28 +276,4 @@ class MGC_ExpenseBankAccounts(models.Model):
             self.name = "".join(self.nameList)
     
 
-
-class XMLRPC_Connection:
-    url = ''
-    db = ''
-    uname = ''
-    password = ''
-
-    uid = None
-    model = None
-
-    def __init__(self, url, db, uname, password):
-        
-        self.url = url
-        self.db = db
-        self.uname = uname
-        self.password = password
-
-        common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(self.url))
-
-        self.uid = common.authenticate(self.db, self.uname, self.password, {})
-        self.model = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(self.url))
-
-    def getData(self, model, action, condition, result):
-        return self.model.execute_kw(self.db, self.uid, self.password, model, action, condition, result)
 

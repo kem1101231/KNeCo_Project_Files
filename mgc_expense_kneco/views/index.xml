@@ -76,7 +76,7 @@
                                         <field name="department"/>
                                     </group>
                                     <group>
-                                        <field name="request_ref_type"   editable="False"  options="{'no_create':True}"/>
+                                        <field name="request_ref_type" class="oe_edit_only"   editable="False"  options="{'no_create':True}"/>
                                         <!--<field name="request_ref_type_name" string="Reference"/>-->
                                         <field name="expense_type" domain="[('fs_class_id', '=', request_ref_type)]"  attrs="{'invisible': [('request_ref_type', '=', '0')]}"   editable="False"  options="{'no_create':True}"/>
                                         <field name="purpose"/>
@@ -92,15 +92,21 @@
                                         <field name="is_shared"/>
                                     </group>
                                     <group>
-                                        <div attrs="{'invisible': [('request_type_id_type', '!=', 'purchase')]}" >
+                                        <group attrs="{'invisible': [('request_type_id_type', '!=', 'purchase')]}" colspan="2">
+                                            
                                              <field name="purchase_id_source_type" attrs="{'invisible': [('request_type_id_type', '!=', 'purchase')]}" />
-                                            <field name="purchase_id_ext" attrs="{'invisible': [('purchase_id_source_type', '=', 'internal'),('request_type_id_type', '!=', 'purchase')]}"/>
-                                            <field name="vendor_bill_ext" attrs="{'invisible': [('purchase_id_source_type', '=', 'internal'),('request_type_id_type', '!=', 'purchase')]}"/>
-                                            <field name="purchase_id" attrs="{'invisible': [('purchase_id_source_type', '!=', 'internal'),('request_type_id_type', '!=', 'purchase')]}" options="{'no_create':True}"/>
-                                            <field name="vendor_bill" attrs="{'invisible': [('purchase_id_source_type', '!=', 'internal'),('request_type_id_type', '!=', 'purchase')]}" options="{'no_create':True}"/>
-                                        </div>
+                                             <field name="purchase_id_ext" invisible="1"/>
+                                            <field name="vendor_bill_id_ext" invisible="1"/>
+                                            
+                                            <field name="purchase_id_number_ext" attrs="{'invisible': [('purchase_id_source_type', '=', 'internal')]}"/>
+                                            <field name="vendor_bill_ext" attrs="{'invisible': [('purchase_id_source_type', '=', 'internal')]}"/>
+                                            
 
-                                       
+                                            <field name="purchase_id" attrs="{'invisible': [('purchase_id_source_type', '!=', 'internal')]}" options="{'no_create':True}"/>
+                                            <field name="vendor_bill" attrs="{'invisible': [('purchase_id_source_type', '!=', 'internal')]}" options="{'no_create':True}"/>
+                                        </group>
+                                     
+                                          
                                     </group>
                                     <group>
                                         <field name="bu_id"/>
