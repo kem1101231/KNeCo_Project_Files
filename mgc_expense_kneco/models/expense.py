@@ -120,8 +120,8 @@ class MGC_Expense(models.Model):
             xmlrpc_accessData = self.ext_Access_Data[self.purchase_id_source_type]
             #print(xmlrpc_accessData)
             #'http://192.168.93.3:8069', xmlrpc_accessData[0], xmlrpc_accessData[1], xmlrpc_accessData[2]/// [[['mgc_request_id', '=', self.request_reference.id],['name','=', self.purchase_id_number_ext]]]
-            xmlrpcData = XMLRPC_Connection().getData('purchase.order','search', [[[]]], {'fields': ['name','amount_total'], 'limit': 0})
-            print(xmlrpcData)
+            #xmlrpcData = XMLRPC_Connection().getData('purchase.order','search', [[[]]], {'fields': ['name','amount_total'], 'limit': 0})
+            #print(xmlrpcData)
 
     @api.constrains('amount')
     def _amount_check(self):
