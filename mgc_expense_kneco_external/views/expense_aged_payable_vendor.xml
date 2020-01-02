@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="expense_aged_payable_vendor">
+    <t t-call="report.html_container">
+        <link rel='stylesheet' href="/mgc_request/static/src/css/bootstrap.css"/>
+        <link rel='stylesheet' href="/mgc_request/static/src/css/font-awesome.css"/>
+            <div class="page">
+  <div class="col-lg-12" style="margin: 0px; padding:0px; border:0px solid #fff">
+        <div class="panel panel-default" style="border:0px solid #fff"> 
+            <div class="panel-body" style=" margin:10px; padding:5px;">
+                         <div class="table-responsive" style="margin-top: 0px;padding-top: 0px; border: 1px solid #fff;">
+                                <table class="table table-hover" style="margin-top: 0px;padding-top: 0px;">
+                                    <tbody class="text-center">
+                                        <tr>
+                                            <td style="font-size: 15px; font-weight: bold; padding-bottom: 0px; padding-top: 10px;  border: 1px solid #fff">Marbel Universal Trading Inc.</td>
+                                        </tr>
+                                         <tr>
+                                            <td style="font-size: 15px; font-weight: bold; padding-bottom: 0px; padding-top: 2px;  border: 1px solid #fff">Aged Payables</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-size: 15px; font-weight: bold; padding-bottom: 0px; padding-top: 2px;  border: 1px solid #fff">As of: <span t-esc="dataInput['date_prepared']" /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table table-hover" style="margin-top: 15px;padding-top: 0px; margin-bottom: 15px;">
+                                    <tbody>
+                                        <tr>
+                                            <td style="font-size: 10px; font-weight: bold; padding:0px;width: 100px; border: 1px solid #fff; padding-top: 4px;"></td>
+                                            <td style="font-size: 13px;  padding:0px; width: 350px;  border: 1px solid #fff;s padding-right: 20px; margin-right: 20px;padding-top: 4px;"></td>
+                                            <td style="font-size: 10px; font-weight: bold; padding:0px;width: 130px; border: 1px solid #fff; padding-left: 15px;padding-top: 4px;" >DATE PREPARED:</td>
+                                            <td style="font-size: 14px; padding:0px;width: 160px;border: 1px solid #fff; border-bottom: 1px solid #000;">MON 00, 0000</td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                                            <t t-foreach="dataInput['data_line']" t-as="line">
+                                                    <table class="table table-hover" style="margin-top: 10px;padding-top: 0px; margin-bottom: 8px; border-top: 2px solid #bbb; ">
+                                                        <thead >
+                                                        <tr>
+                                                            <th style="font-size: 12px; padding:5px;width: 400px; border: 1px solid #fff">VENDOR</th>
+                                                            
+                                                        </tr>
+                                                    </thead>
+                                                     <tbody>
+                                                       <tr>
+                                                            
+                                                            <td style="font-size: 12px;  padding:0px; border: 1px solid #fff; border-bottom: 1px solid #000; padding-top: 5px; font-weight:bold; padding-left: 8px; font-size: 18px;"><span t-esc="line['name']" /></td>
+                                                           
+                                                        </tr>
+                                                    </tbody>
+                                                    </table>
+                                                <table class="table table-hover" style="margin-top: 2px;padding-top: 0px;">
+                                                    
+                                                    <thead  class="text-center">
+                                                        <tr style="background-color:#ddd;">
+                                                            
+                                                            
+                                                            <th style="font-size: 12px; padding:5px;width: 120px; border: 1px solid #000" class="text-center">INVOICE/CM#</th>
+                                                            <th style="font-size: 12px; padding:5px;width: 80px; border: 1px solid #000" class="text-center">DATE</th>
+                                                            <th style="font-size: 12px; padding:5px;width: 280px; border: 1px solid #000" class="text-center">DESCRIPTION</th>
+                                                            <th style="font-size: 12px; padding:5px;width: 100px; border: 1px solid #000" class="text-center">INVOICE AMT</th>
+                                                            <th style="font-size: 12px; padding:5px;width: 100px; border: 1px solid #000" class="text-center">WITHHOLDING</th>
+                                                            <th style="font-size: 12px; padding:5px;width: 100px; border: 1px solid #000" class="text-center">PAYMENTS</th>
+                                                            <th style="font-size: 12px; padding:5px;width: 100px; border: 1px solid #000" class="text-center">AMOUNT DUE</th>
+                                                            <th style="font-size: 12px; padding:5px;width: 100px; border: 1px solid #000" class="text-center">0-30</th>
+                                                            <th style="font-size: 12px; padding:5px;width: 100px; border: 1px solid #000" class="text-center">31-60</th>
+                                                            <th style="font-size: 12px; padding:5px;width: 100px; border: 1px solid #000" class="text-center">61-90</th>
+                                                            <th style="font-size: 12px; padding:5px;width: 100px; border: 1px solid #000" class="text-center">91 UP</th>
+                                                            <th style="font-size: 12px; padding:5px;width: 70px; border: 1px solid #000" class="text-center">PASS DUE</th>
+                                                        </tr>
+                                                        
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <t t-foreach="line['output_list']" t-as="vendor_line" >
+                                                       <tr>
+                                                            
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff; padding-top: 5px;" class="text-center"><span t-esc="vendor_line['invoice']"/></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff; padding-left: 8px; padding-top: 5px;" class="text-center"><span t-esc="vendor_line['date_start']"/></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff; padding-right: 8px;padding-top: 5px; padding-left: 8px;"><span t-esc="vendor_line['purpose']"/></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff; padding-right: 8px;padding-top: 5px;" class="text-right"><span t-esc="vendor_line['invoice_amt']"/></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff; padding-right: 8px;padding-top: 5px;" class="text-right"><span t-esc="vendor_line['withhold_amt']"/></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff; padding-right: 8px;padding-top: 5px;" class="text-right"><span t-esc="vendor_line['paid_amt']"/></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff; padding-right: 8px;padding-top: 5px;" class="text-right"><span t-esc="vendor_line['amt_balance']"/></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff; padding-right: 8px;padding-top: 5px;" class="text-right"><span t-esc="vendor_line['30']"/></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff; padding-right: 8px;padding-top: 5px;" class="text-right"><span t-esc="vendor_line['60']"/></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff; padding-right: 8px;padding-top: 5px;" class="text-right"><span t-esc="vendor_line['90']"/></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff; padding-right: 8px;padding-top: 5px;" class="text-right"><span t-esc="vendor_line['91']"/></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff; padding-right: 8px;padding-top: 5px;" class="text-center"><span t-esc="vendor_line['due_status']"/></td>
+                                                        </tr>
+                                                    </t>
+                                                       
+                                                         <tr style="height: 50px;">
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff;"></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff;"></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff;"></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff;"></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff;"></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff;"></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff;"></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff;"></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff;"></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff;"></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff;"></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; border-bottom: 1px solid #fff;"></td>
+                                                            
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:6px; font-weight: bold; " class="text-right">TOTAL</td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:6px; font-weight: bold; " class="text-right"><span t-esc="line['total_invoice']" /></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:6px; font-weight: bold; " class="text-right"></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:6px; font-weight: bold; " class="text-right"><span t-esc="line['total_paid']" /></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:6px; font-weight: bold; " class="text-right"><span t-esc="line['total_balance']" /></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:6px; font-weight: bold; " class="text-right"><span t-esc="line['total_30']" /></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:6px; font-weight: bold; " class="text-right"><span t-esc="line['total_60']" /></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:6px; font-weight: bold; " class="text-right"><span t-esc="line['total_90']" /></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:6px; font-weight: bold; " class="text-right"><span t-esc="line['total_91']" /></td>
+                                                            <td style="border: 1px solid #000; font-size: 12px;  padding:0px; "></td>
+                                                            
+                                                        </tr>
+                                                        
+                                                    </tbody>
+                                                </table>
+                                    </t>
+                                                
+                            </div>
+            </div>
+           
+        </div>
+    </div>
+            </div>  
+    </t>
+</template>
+</odoo>

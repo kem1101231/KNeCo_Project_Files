@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="expense_check_template">
+    <t t-call="report.html_container">
+        <link rel='stylesheet' href="/mgc_request/static/src/css/bootstrap.css"/>
+        <link rel='stylesheet' href="/mgc_request/static/src/css/font-awesome.css"/>
+                <div class="page">
+                                <div style="padding-top:60px;">
+                                    <table style="margin-top: 0px; padding-top: 0px;">
+                                    <tbody>
+                                        <tr>
+                                               
+                                           <td rowspan="2" style="vertical-align: bottom; padding-left:70px; width:655px;"><span t-esc="dataInput['purpose']"/></td>
+                                           <td>
+                                               <span style="font-size:12px; padding-left:28px;"><span t-esc="dataInput['date']"/></span>
+                                           </td>
+                                        </tr>
+                                        <tr>
+                                           
+                                           <td style="padding-left:28px; padding-top: 12px;"><span t-esc="dataInput['amount']"/></td>
+                                        </tr>
+                                        <tr>
+                                           <td colspan="2"  style="vertical-align: bottom; padding-left:70px; padding-top:15px;"><span t-esc="dataInput['amount_in_words']"/></td>
+                                        </tr>
+                                        <!-- <tr>
+                                            <td style="font-size: 12px; font-weight: bold; padding:0px;width: 100px; border: 1px solid #fff">Description:</td>
+                                            <td style="font-size: 13px;  padding:0px; width: 450px; padding-right: 50px;border: 1px solid #fff; border-bottom: 1px solid #000"></td>
+                                            <td style="font-size: 12px; font-weight: bold; padding:0px;width: 80px; border: 1px solid #fff" class="text-right">Date:</td>
+                                            <td style="font-size: 14px; padding:0px;width: 180px;border: 1px solid #fff; border-bottom: 1px solid #000" class="text-center"><span t-esc="dataInput['cv_date']"/></td>
+                                        </tr> -->
+                                    </tbody>
+                                </table>
+                                </div>
+
+
+                                
+                </div>  
+    </t>
+</template>
+</odoo>

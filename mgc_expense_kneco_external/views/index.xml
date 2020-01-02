@@ -1,0 +1,1994 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- window action -->
+        <!--
+            The following tag is an action definition for a "window action",
+            that is an action opening a view or a set of views
+        -->
+        <!-- ============================  Views  =================================== -->
+
+
+        <record id="view_your_model_name_tree" model="ir.ui.view">
+            <field name="name">Checks_tree</field>
+            <field name="model">mgc.expense.base</field>
+            <field name="arch" type="xml">
+            
+                <tree string="name">
+                                <field name="name"/>
+                                <field name="request_type_id_type"/>
+                                <field name="vendor_id"/>
+                                <field name="purpose"/>
+                               <!--  <field name="bu_id"/>  -->
+                                <field name="create_date" string="Date Prepared"  widget="date"/>
+                                <field  name="amount" widget="monetary" sum="Total Payable"/>
+                                <field name="is_shared" class="oe_right"/>
+                                <field name="state" class="oe_right"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="expense_transaction_tree" model="ir.ui.view">
+            <field name="name">Disbursement</field>
+            <field name="model">mgc.expense.transactions</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                                <field name="name"/>
+                                <field name="vendor"/>
+                               <!--  <field name="bu_id"/> -->
+                                <field name="bank_id"/>
+                                <field name="account_number"/>
+                                <field name="check_number"/>
+                                <field name="check_amount" sum="Total"/>
+                                <field name="state"/>
+                                
+                </tree>
+            </field>
+        </record>        
+        <record id="bank_model_tree" model="ir.ui.view">
+            <field name="name">Banks</field>
+            <field name="model">mgc.expense.banks</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="check_list_tree" model="ir.ui.view">
+            <field name="name">check_list_tree</field>
+            <field name="model">mgc.expense.checks</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                        <field name="name"/>
+                        <field name="bu_source"/>
+                        <field name="bank_source" string="Bank Source"/>
+                        <field name="check_date"/>
+                        <field name="recon_status"/>
+                        <field class="oe_left" name="amount" widget="monetary"/>
+                </tree>
+            </field>
+        </record>
+        <record id="bank_acct_list_tree" model="ir.ui.view">
+            <field name="name">bank_acct_list_tree</field>
+            <field name="model">mgc.expense.bank_accounts</field>
+            <field name="arch" type="xml">
+                <tree string="name">
+                                <field name="bu_id"/>
+                                <field name="account_number" />
+                                <field name="bank_id" string="Bank Source"/>
+                                <!-- <field name="bu_id"/> -->
+                                <field name="cash_on_bank"/>
+                </tree>
+            </field>
+        </record>
+        <record id="shared_bu_list_tree" model="ir.ui.view">
+            <field name="name">shared_bu_list_tree</field>
+            <field name="model">mgc.expense.base.shared.bu</field>
+            <field name="arch" type="xml">
+                <tree string="name" editable="bottom">
+                                <field name="buid"/>
+                                <field name="share" />
+                                <field name="account" string="Account Entry"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="expense_form">
+
+                <field name="name">expense_form</field>
+                <field name="model">mgc.expense.base</field>
+                <field name="arch" type="xml">
+
+                     <form>
+                            <header>
+                                <button 
+                                    states="check"  
+                                    class="oe_inline oe_highlight" 
+                                    type="object"
+                                    name="confirm_payable" 
+                                    string="Confirm"  
+                                    confirm="Are you sure you want to confirm the payable?"
+                                    groups="mgc_expense_kneco_external.group_payable_supervisor"
+                                    attrs="{'invisible':[('state','!=','check')]}"
+                                    /> 
+
+                                <button      
+                                    class="oe_inline oe_highlight" 
+                                    type="object"
+                                    name="validate_payable"
+                                    string="Validate"  
+                                    attrs="{'invisible':['|',('state','!=', 'confirm'),('add_to_soa','=','1')]}"
+                                    />  
+
+                                <button      
+                                    class="oe_inline oe_highlight" 
+                                    type="object"
+                                    name="print_journal" 
+                                    string="Print Journal"  
+                                    attrs="{'invisible':[('state','in', ['draft', 'check', 'cancel'])]}"
+                                    /> 
+                                
+                                <button      
+                                    class="oe_inline" 
+                                    type="object"
+                                    name="cancel_payable"
+                                    string="Cancel"  
+                                    attrs="{'invisible':[('state','in', ['draft','confirm', 'open', 'tag', 'paid', 'cancel'])]}"
+                                    /> 
+
+                                <button      
+                                    class="oe_inline oe_highlight" 
+                                    type="object"
+                                    name="set_as_draft"
+                                    string="Resume"  
+                                    attrs="{'invisible':[('state','!=', 'cancel')]}"
+                                    />     
+
+                                <field name="state" widget="statusbar" statusbar_visible="draft,check,confirm,open,tag,paid"/>
+                            
+                            </header>
+                            <!-- groups="mgc_request.group_request_manager" -->                            
+                            <sheet>
+                                 <div class="oe_title" style="margin-bottom: 10px;" >
+                                    <label for="name" class="oe_read_only"/>
+                                    <h1>
+                                        <field name="name" class="oe_read_only" placeholder="Provide the expense id"/>
+                                    </h1>
+                                </div>
+                                <group>
+                                    <group string="Reference">
+                                        <group colspan="2">
+                                            <field name="request_reference_id" invisible="1"/>
+                                            <field name="request_reference" attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}"/>
+                                            <field name="tagged_request" invisible="1"/>
+                                            <div colspan="2" attrs="{'invisible':[('tagged_request','=', False)]}"></div>
+                                            <field name="is_shared" invisible="1"/>
+                                            <field name="request_with_spec_instr" invisible="1"/>
+                                            <field name="request_spec_instr" attrs="{'invisible': [('request_with_spec_instr', '=', False)]}"/>
+                                        </group>
+                                        <group colspan="2" attrs="{'invisible': [('request_type_id_type', '!=', 'cash')]}">
+                                            <field name="request_type" invisible="1"/>
+                                            <field name="request_type_id_type" invisible="1"/>
+                                            <field name="request_name" invisible="1"/>
+                                            <field name="vendor_id" attrs="{'invisible': [('request_type_id_type', '!=', 'cash')], 'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}" domain="[('supplier','=',True)]"/><!-- attrs="{}" -->
+                                           
+                                            <field name="dummy_field" invisible="1"/>
+                                            <field name="vendor_reputation" attrs="{'invisible': [('request_type_id_type', '!=', 'cash')]}" invisible="1"/>
+                                            <field name="vendor_tin" attrs="{'invisible': [('request_type_id_type', '!=', 'cash')]}" invisible="1"/>
+                                            <field name="vendor_vat" attrs="{'invisible': [('request_type_id_type', '!=', 'cash')]}" invisible="1"/>
+
+                                            <field name="is_efo" attrs="{'invisible': [('request_type_id_type', '!=', 'cash')], 'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}" />
+                                            <field name="date_due_no_vendor_bill" attrs="{'invisible': [('request_type_id_type', '!=', 'cash')], 'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}" />
+
+                                        </group>
+                                        <group  colspan="2" attrs="{'invisible': [('request_type_id_type', '!=', 'purchase')]}">
+                                            <separator string="Purchase Transaction" colspan="2" style="font-size: 17px; margin-bottom:20px;"/>
+                                             
+                                             <field name="purchase_id_source_type" attrs="{'invisible': [('request_type_id_type', '!=', 'purchase')]}" invisible="1"/>
+                                             <!-- <field name="purchase_id_ext" invisible="1"/> -->
+                                            <!-- <field name="vendor_bill_id_ext" invisible="1"/> -->
+                                            
+                                            <field  name="purchase_id_number_ext" 
+                                                    attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}" domain="[('mgc_request_number_name', '=', request_reference )]"  editable="False"  
+                                                    options="{'no_create':True}"
+                                                     
+                                            />
+                                            <field name="purchase_order_name" invisible="1"/>
+
+                                            <field  name="vendor_bill_ext" 
+                                                   
+                                                    domain="[('origin', '=', purchase_order_name )]"  
+                                                    editable="False"  
+                                                    options="{'no_create':True}"
+                                                    attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}"
+                                            />
+                                            
+                                            <field  name="vendor_bill_vendor" 
+                                                     attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}"
+                                            />
+                                            <!-- <field name="vendor_bill_date" attrs="{'invisible': [('purchase_id_source_type', '=', 'internal')]}"/> -->
+                                            <field  name="vendor_bill_due_date" 
+                                                     attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}"
+                                            />
+                                            
+
+                                            <!-- <field name="purchase_id" attrs="{'invisible': [('purchase_id_source_type', '!=', 'internal')]}" options="{'no_create':True}"/>
+                                            <field name="vendor_bill" attrs="{'invisible': [('purchase_id_source_type', '!=', 'internal')]}" options="{'no_create':True}"/> -->
+                                        </group>
+                                        <group colspan="2" attrs="{'invisible': [('request_reference', '=', 'None')]}">
+                                            <field  name="receipt_number"   attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}"/>
+                                        </group>
+
+                                    </group>
+                                    
+                                    <group string="Payable Details">
+                                        <group colspan="2">
+                                            <field name="purpose" attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}"/>
+                                            <field name="journal_id" invisible="1" />
+                                            <field name="journal_journal" invisible="0" attrs="{'readonly': [('state','in',['open','tag','paid'])]}"/> <!-- '|',('request_type_id_type', '!=', 'cash'), -->
+                                            <field name="is_catered" invisible="1"/>
+                                            <field name="company_id"  attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}"/>
+                                        </group>
+                                        <group colspan="2">
+                                         
+                                        <!-- <field name="check_list_amount" class="oe_read_only" invisible="1"/> -->
+                                        <!-- 
+                                        <field name="is_shared" style="margin-bottom:10px"/>
+                                        <field name="shareList"  attrs="{'invisible': [('is_shared', '=', False)]}" /> 
+                                        -->
+                                    </group>
+                                    <group colspan="2">
+                                        <field name="expense_credit_account"  editable="False"  options="{'no_create':True}"  attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}"/>
+                                        
+                                        <separator colspan="2" string="" style="margin-top:25px;"/>
+                                        <field name="expense_type"  editable="False"  options="{'no_create':True}"  attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}"/>
+                                        <field name="add_to_soa"  editable="False"  options="{'no_create':True}"  attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])], 'invisible':[('state','in',['confirm','open','tag','paid'])]}"/>
+                                        <field name="soa_ref_id" attrs="{'invisible':['|',('add_to_soa','=','0'),('state','in',['draft','check'])]}" readonly="1"/>
+
+                                    </group>
+                                    </group>
+                                    
+                                    
+                                </group>
+                                <group>
+                                        <group>
+                                            <field string="Prepared by" name="create_uid" readonly="1"/>
+                                            <field string="Confirmed by" name="validated_by" readonly="1"/>
+                                        </group>
+
+                                        <group>
+                                            <field name="amount_ref" invisible="1"/>
+                                            <field name="with_tax" invisible="1"/>
+                                            <field name="compute_tax" invisible="0" attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}"/>
+                                            <separator colspan="2" string="" class="oe_edit_only" style="margin-top:15px;"/>
+                                            <field name="vated_payable" invisible="0"/>
+                                            <field name="expense_in_tax_credit_account" class="oe_edit_only"  editable="False"  options="{'no_create':True}"  attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])], 'invisible':[('vated_payable','=', False)]}"/>
+                                            <separator colspan="2" string="" class="oe_edit_only" style="margin-top:15px;"/>
+                                            <field name="tax_ids" string="Taxed Used" attrs="{'readonly': [('state', 'in', ['cancel','open','tag','paid'])]}"/>
+                                            <field name="expense_tax_credit_account"  class="oe_edit_only"  editable="False"  options="{'no_create':True}"  attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}"/>
+                                        </group>  
+                                </group>
+                                <notebook>
+
+                                        <page string="Payable's Entries">
+                                            <field name="debitList" mode="tree"  attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}">
+                                                <tree>
+                                                    <field name="expense_id" invisible="1" />
+                                                    <field name="description" />
+                                                    <!-- <field name="account_type" class="oe_edit_only"/> -->
+                                                    <field name="account" editable="False" options="{'no_create':True, 'edit':False}" />
+                                                    <!-- domain="[('fs_class_id', '=', account_type)]"  -->
+                                                    <!-- <field name="selected_account_type" editable="False" options="{'no_create':True, 'edit':False}"/> -->
+                                                    <field name="entry_type" class="oe_read_only" />  
+                                                    <field name="amount" />  
+                                                    <field name="is_shared" />
+                                                    <field name="shareList" />
+                                                    <field name="ref_line_id" invisible="1"/>
+                                                    <field name="ref_description" invisible="1"/>
+                                                </tree>
+                                             </field>   
+                                        </page>
+    
+    <!-- ===================================================================================================== -->
+    
+                                        <!-- <page string="Transaction Journal" class="oe_read_only">
+                                            <field name="transactionRecord" >
+                                                 <tree >
+                                                    <field name="reference_pay" invisible="1" />
+                                                    <field name="reference_code" invisible="1" />
+                                                    <field name="reference_type" invisible="1" />
+                                                    <field name="location_id" invisible="1"/>
+                                                    <field name="description"/>
+                                                    <field name="account_name"/>
+                                                    <field name="entry_type" invisible="1" />
+                                                    <field name="amount" invisible="1" />
+                                                    <field name="debit_value"  sum="Total Tax Included" class="oe_highlight"/>
+                                                    <field name="credit_value"  sum="Total Tax Included" class="oe_highlight"/> 
+                                                </tree>
+                                             </field>  -->
+
+                                <!-- <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/> 
+
+                                    options="{'currency_field': 'currency_id'}"
+
+                                -->
+                                    		<!-- <group class="oe_subtotal_footer oe_right">
+			                                    <div class="oe_subtotal_footer_separator oe_inline">
+			                                        <label for="debit_total_amount"/>
+			                                    </div> 
+			                                    <field name="debit_total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+			                                    <div class="oe_subtotal_footer_separator oe_inline">
+			                                        <label for="credit_total_amount"/>
+			                                    </div> 
+			                                    <field name="credit_total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+		                                	</group>
+		                                	<group class="oe_subtotal_footer oe_right">
+			                                    
+		                                	</group>
+
+                                        </page>
+                                         -->
+ <!-- ===================================================================================================== -->
+
+                                        <!-- <page string="Prepared Checks for the Expense" class="oe_read_only">
+                                            <field name="check_list"/>
+                                        </page> -->
+                                        <page string="Journal Items">
+                                            <field name="journal_line" mode="tree" options="{'no_create':True}"  attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}" >
+                                              <tree editable="bottom" create="false">
+                                                    <!-- <field name="payable_id" invisible="1"/> -->
+                                                    <field name="account_id" />
+                                                    <field name="currency_id" invisible="1"/>
+                                                    <field name="partner_id" readonly="1"/>
+                                                    <field name="create_date" />
+                                                    <field name="name" />
+                                                    <field name="debit" sum="Total Debit" readonly="1"/>
+                                                    <field name="credit" sum="Total Debit" readonly="1"/>
+                                                    <field name="date_maturity"/> 
+                                                </tree> 
+                                            </field>
+                                        </page>
+                                </notebook>
+                                <group>
+                                <!--                                         <field name="amount" string="Amount" attrs="{'readonly': [('state', '=', 'open')]}"/>
+                                         <field name="amount_ref" invisible="1"/>
+                                         
+                                        <field name="tax_amount_value" readonly="1" attrs="{'invisible': [('with_tax', '=', False)]}"/>
+                                        <field name="final_amount" string="Amount to Pay" readonly="1"/>
+                                        
+   -->
+                                        <group class="oe_subtotal_footer oe_right"  style="width:250px;">
+                                                        >
+                                                      
+                                                        <field name="net_of_vat_value" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible':[('compute_tax','=','0')]}" readonly="1"/>
+                                                        <field name="input_tax_value" attrs="{'invisible':[('compute_tax','=','0')]}" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                                        <div class="oe_subtotal_footer_separator oe_inline">
+                                                            <label for="amount" string="Invoice Amount"/>
+                                                        </div> 
+                                                        <field name="amount" string="Invoice Amount"  nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}"/>
+
+                                                        <!-- <field name="amount" string="Invoice Amount" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('state', 'in', ['confirm','open','tag','paid'])]}"/> -->
+                                                        <separator colspan="2" string="" style="margin-top:10px;"/>
+                                                        <field name="tax_amount_value_ref" invisible="1"/>
+                                                        <field name="tax_amount_value" string="Withholding Tax" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="0" attrs="{'readonly':[('state','in',['done','open','tag','paid'])],}"/>
+                                                        <field name="tax_cater_status" string="Tax Deducted" readonly="1" attrs="{'invisible':[('compute_tax','!=','1')]}"/>
+                                                        
+                                                        <!-- <field name="total_tax_amount_value" string="Total Tax Value" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/> --><!-- attrs="{'invisible':[('state','in',['draft','check','confirm'])]}"   -->
+                                                        <div class="oe_subtotal_footer_separator oe_inline">
+                                                            <label for="final_amount"/>
+                                                        </div> 
+                                                        <field name="final_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                        
+                                                        <field name="catered_amount" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible':[('is_catered','=',False)]}" readonly="1"/> <!-- -->
+                                                        <field name="catered_tax_amount" invisible="1" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible':[('is_catered','=',False)]}"/>
+                                                        <div class="oe_subtotal_footer_separator oe_inline" style="margin-bottom:20px;"  attrs="{'invisible':[('is_catered','=',False)]}">
+                                                            <label for="balance_amount"  attrs="{'invisible':[('is_catered','=',False)]}"/>
+                                                        </div> 
+                                                        <field name="balance_amount"  attrs="{'invisible':[('is_catered','=',False)]}" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+
+
+                                        </group>
+                                </group>
+                            </sheet>
+                            <div class="oe_chatter">
+                                <field name="message_follower_ids" widget="mail_followers"/>
+                                <field name="message_ids" widget="mail_thread"/>
+                            </div>
+                     </form>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="expense_line_form">
+
+                <field name="name">expense_line_form</field>
+                <field name="model">mgc.expense.base.line</field>
+                <field name="arch" type="xml">
+
+                     <form name="Payable's Entry Information">
+                            <!--<header> ... content of the status bar  ... </header>-->
+                            <sheet name="Payable's Entry Information">
+                                    <group>
+                                        <field name="expense_id" invisible="1" />
+                                        <field name="description"/>
+                                        <field name="account" editable="False" options="{'no_create':True, 'edit':False}"/>
+                                        <field name="amount"/>  
+                                        <field name="is_shared"/>  
+                                        <field name="shareList" attrs="{'invisible': [('is_shared', '=', False)]}"/> 
+                                        <field name="entry_type" invisible="1"/>
+                                    </group>
+                            </sheet>
+
+                     </form>
+
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="bank_form">
+
+                <field name="name">bank_form</field>
+                <field name="model">mgc.expense.banks</field>
+                <field name="arch" type="xml">
+
+                     <form>
+                            <!--<header> ... content of the status bar  ... </header>-->
+                            <sheet>
+                                 <div class="oe_title" style="margin-bottom: 23px;">
+                                    <label for="name"/>
+                                    <h1>
+                                        <field name="name" placeholder="Identify bank name"/>
+                                    </h1>
+                                </div>
+                                    <group>
+                                            <field name="bank_id"/>
+                                            <field name="bank_code"/>
+                                            <field name="bank_complete_name"/>
+                                        </group>
+
+                                
+                                    <notebook class="oe_read_only">
+                                        <page string="Bank Accounts">
+                                            <field name="bank_accounts">
+                                            </field>
+                                        </page>
+                                         <!-- <page string="Prepared Checks">
+                                            <field name="check_list" >
+                                            </field>
+                                        </page> -->
+                                    </notebook>
+                            </sheet>
+
+                     </form>
+
+                </field>
+            </record>
+             <record model="ir.ui.view" id="bu_form">
+
+                <field name="name">bu_form</field>
+                <field name="model">mgc.expense.bu</field>
+                <field name="arch" type="xml">
+
+                     <form>
+                            <!--<header> ... content of the status bar  ... </header>-->
+                            <sheet>
+                                 <div class="oe_title" style="margin-bottom: 23px;">
+                                    <label for="name"/>
+                                    <h1>
+                                        <field name="name" placeholder="Identify business unit"/>
+                                    </h1>
+                                </div>
+                                    <group>
+                                        <field name="bu_code"/>
+                                        <field name="sub_bu_of" class="oe_edit_only"/>
+                                        <field name="bu_complete_name" class="oe_read_only"/>
+                                    </group>
+                               
+                        
+                                    <notebook class="oe_read_only">
+                                        <page string="Bank Accounts">
+                                            <field name="bank_accounts">
+                                            </field>
+                                        </page><!-- 
+                                         <page string="Prepared Checks">
+                                            <field name="check_list" >
+                                            </field>
+                                        </page> -->
+                                    </notebook>
+                            </sheet>
+
+                     </form>
+
+                </field>
+            </record>
+            <record model="ir.ui.view" id="check_form">
+
+                <field name="name">checks_form</field>
+                <field name="model">mgc.expense.checks</field>
+                <field name="arch" type="xml">
+
+                     <form>
+                                <header>
+                                    <button style="margin-right:10px" 
+                                            name="" 
+                                            type="object"  
+                                            string="Cancel Check" 
+                                            attrs="{'invisible': [('state', 'in', ['draft','reconcile'])]}"
+                                            />
+
+                                    <field name="state" widget="statusbar" statusbar_visible="unreconcile,check,print,validate,reconcile"/>
+                                </header>                            
+                            <sheet>
+                                <label for="reconcile_check"/>
+                                <button name="reconcile_check" type="object" class="oe_highlight oe_right oe_read_only" string="Reconcile" confirm="Would you like to reconcile the check?" attrs="{'invisible':[('state','!=','validate')]}"/>
+                                 <button style="margin-right:10px" name="print_check" type="object" class="oe_highlight oe_right oe_read_only" string="Print Check" attrs="{'invisible': [('state', '!=', 'print')]}"/>
+
+
+                                 <div class="oe_title" style="margin-bottom: 23px;">
+                                    <label for="name"/>
+                                    <h1>
+                                        <field name="name" placeholder="Provide the check number"/>
+                                    </h1>
+                                </div>
+                                <group>
+                                    
+                                    <group>
+                                        <field name="expense_trans_id"/>
+                                        <!-- <field name="expense_id"/> -->
+                                        <!-- <field name="expense_bu" invisible="1"/> -->
+                                        <field name="purpose"/>
+                                        
+                                        <separator colspan="2" string="" style="margin-bottom:20px;" attrs="{'invisible':[('state','in',['draft','check','print'])]}"/>
+
+                                        <field name="check_printed" attrs="{'invisible':[('state','in',['draft','check','print'])]}"/>
+                                        <field name="printed_by" attrs="{'invisible':[('state','in',['draft','check','print'])]}"/>
+
+                                        <separator colspan="2" string="" style="margin-bottom:20px;"/>
+                                        <field class="oe_read_only" name="recon_status" invisible="1"/>
+                                        <field class="oe_read_only" name="recon_date" attrs="{'invisible':[('state','!=','reconcile')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="check_date" options="{'datepicker':{'minDate': 0}}"/>
+                                        <field name="bu_source"/>
+                                        <field name="bank_source"/>
+                                        <field name="account_number" string="Account Name" invisible="1"/> <!-- domain="[('bu_id', '=', expense_bu)]" -->
+                                        <field name="bank_account"/>
+                                        
+                                        
+                                    </group>
+                                    
+                                </group>
+                                <div class="oe_title oe_right" style="margin-right: 145px; border-bottom: 1px solid #000;margin-top:20px;">
+                                    <label for="amount" string="Check Amount"/>
+                                    <h1 style="margin-left:25px; padding-right:25px;">
+                                        <field name="amount"/>
+                                    </h1>
+                                </div>
+                                <group>
+                                    <separator string=""/>
+                                </group>
+
+                            </sheet>
+
+                     </form>
+
+                </field>
+            </record>
+            <record model="ir.ui.view" id="bank_acct_form">
+
+                <field name="name">checks_form</field>
+                <field name="model">mgc.expense.bank_accounts</field>
+                <field name="arch" type="xml">
+
+                     <form>
+                            
+                            <sheet>
+
+                                 <div class="oe_title" style="margin-bottom: 23px;">
+                                    <label for="name"/>
+                                    <h1>
+                                        <field name="name" placeholder="Provide an account name"/>
+                                    </h1>
+                                </div>
+                                <group colspan="2">
+                                <group style="margin-bottom:50px;">
+                                        <field name="account_number"/>
+                                        <field name="bank_id"/>
+                                        <field name="bu_id"/>
+                                        <field name="cash_on_bank" readonly="1"/>
+                                    
+                                </group>
+                                <group style="margin-bottom:50px;">
+                                            <field name="journal_id"/>
+                                            <field name="credit_account"/>
+                                            <field name="check_number_start"/>
+                                            <field name="check_number_end"/>
+                                    
+                                </group>
+                            </group>
+                                <notebook >
+                                    <page string="Fund Movements" >
+                                        <field name="transactions">
+                                            <tree>
+                                                <field name="back_account_id" invisible="1"/>
+                                                <field name="description"/>
+                                                <field name="transaction_type"/>
+                                                <field name="trans_date"/>
+                                                <field name="check_id_reference"/>
+                                                <field name="check_reference"/>
+                                                <field name="amount" />
+                                            </tree>
+                                         </field>   
+                                    </page>
+                                    <page string="Prepared Checks from this Account" class="oe_read_only">
+                                        <field name="check_ids" mode="tree" options="{'no_create':True}" readonly="1">
+                                            <tree create="false">
+                                                <field name="name"/>
+                                                <field name="purpose"/>
+                                                <field name="check_date"/>
+                                                <field name="amount"/>
+                                                <field name="state"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                                </notebook>
+                            </sheet>
+
+                     </form>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="expense_account_pop_input">
+
+                <field name="name">Add Funds</field>
+                <field name="model">mgc.expense.bank_accounts.transactions</field>
+                <field name="arch" type="xml">
+
+                     <form name="Payable's Entry Information">
+                            <!--<header> ... content of the status bar  ... </header>-->
+                            <sheet name="Payable's Entry Information">
+                                    <group>
+                                        <field name="back_account_id" invisible="1"/>
+                                        <field name="description"/>
+                                        <field name="transaction_type"/>
+                                        <field name="check_id_reference" string="Check Number" attrs="{'invisible':[('transaction_type','=','in')]}"/>
+                                        <field name="check_reference" string="Check Number" attrs="{'invisible':[('transaction_type','=','out')]}"/>
+                                        <field name="trans_date"/>
+                                        <field name="amount"/>
+                                    </group>
+                            </sheet>
+
+                     </form>
+
+                </field>
+            </record>
+
+                <record model="ir.ui.view" id="resource_kanban_view">
+                    <field name="name">banks</field>
+                    <field name="model">mgc.expense.banks</field>
+                    <field name="type">kanban</field>
+                    <field name="arch" type="xml">
+                        <kanban>
+                            <templates>
+                                <t t-name="kanban-box">
+                                     <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                        <div class="col-lg-4">
+                                            <div class="oe_resource_image">
+                                            <img t-att-src="kanban_image('res.partner.image', 'image', 'mgc.expense.banks.bank_id')" class="oe_resource_picture"/>
+                                        </div>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <div class="oe_resource_details">
+                                            <ul>
+                                               <li><field name="name"/></li>
+                                             </ul>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </record>
+                <record model="ir.ui.view" id="bu_kanban_view">
+                    <field name="name">bus</field>
+                    <field name="model">mgc.expense.bu</field>
+                    <field name="type">kanban</field>
+                    <field name="arch" type="xml">
+                        <kanban>
+                            <templates>
+                                <t t-name="kanban-box">
+                                     <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                        <div class="oe_resource_image">
+                                            <a type="edit"><img t-att-src="kanban_image('object.name', 'photo', record.id.value)" class="oe_resource_picture"/></a>
+                                        </div>
+                                        <div class="oe_resource_details">
+                                            <ul>
+                                               <li><field name="name"/></li>
+                                             </ul>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </record>
+
+
+        <!-- =============================================================================== -->
+
+
+            <record model="ir.ui.view" id="expense_trans_line_form">
+
+                <field name="name">expense_trans_line_form</field>
+                <field name="model">mgc.expense.transactions.line</field>
+                <field name="arch" type="xml">
+
+                     <form name="Expense's Entry Information">
+                            <!--<header> ... content of the status bar  ... </header>-->
+                            <sheet name="Expense's Entry Information">
+                                    <group>
+                                        <field name="expense_id" invisible="1" />
+                                        <field name="description"/>
+                                        <field name="account" editable="False" options="{'no_create':True, 'edit':False}"/>
+                                        <field name="amount"/>  
+                                        <!-- <field name="is_shared"/>  
+                                        <field name="shareList" attrs="{'invisible': [('is_shared', '=', False)]}"/>  -->
+                                        <field name="entry_type" invisible="1"/>
+                                    </group>
+                            </sheet>
+
+                     </form>
+
+                </field>
+            </record>
+        
+            <record model="ir.ui.view" id="expense_trans_form">
+
+                    <field name="name">Expenses</field>
+                    <field name="model">mgc.expense.transactions</field>
+                    <field name="arch" type="xml">
+
+                         <form>
+                                <header>  
+                                    <button 
+                                    states="check"  
+                                    class="oe_inline oe_highlight" 
+                                    type="object"
+                                    name="validate_expense"
+                                    string="Validate"  
+                                    confirm="Are you sure you want to validate this transaction?" 
+                                    />
+
+                                    <button 
+                                    states="done"  
+                                    class="oe_inline oe_highlight" 
+                                    type="object"
+                                    name="print_cvj"
+                                    string="Print C.V.J."   
+                                    />
+
+                                    <button      
+                                    class="oe_inline" 
+                                    type="object"
+                                    name="cancel_payment"
+                                    string="Cancel"  
+                                    confirm="Are you sure you want to cancel this transaction?"
+                                    attrs="{'invisible':[('state','in', ['draft','valid','cancel'])]}"
+                                    /> 
+                                    
+                                    <button      
+                                    class="oe_inline" 
+                                    type="object"
+                                    name="reset_as_draft"
+                                    confirm="Are you sure you want to resume this transaction?"
+                                    string="Resume"  
+                                    attrs="{'invisible':[('state','!=', 'cancel')]}"
+                                    /> 
+
+                                    <field name="state" widget="statusbar" statusbar_visible="draft,cancelled,check,done,valid"/>
+                                </header>
+                                <sheet style="min-width:1000px;">
+                                     <div class="oe_title oe_read_only" style="margin-bottom: 15px;">
+                                        <label for="name"/>
+                                        <h1>
+                                            <field name="name" placeholder=""/>
+                                        </h1>
+                                    </div>
+                                    <group>
+
+                                        <group colspan="2">
+                                            <group>
+                                               <separator string="Bank Source Details" style="margin-bottom:20px;" colspan="2"/>
+                                                <field name="bu_id" editable="False" options="{'no_create':True, 'edit':False}"  attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                                <field name="bank_id" editable="False" options="{'no_create':True, 'edit':False}"  attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                                <separator string="" style="margin-bottom:25px;" colspan="2"/>
+                                                <field name="account_name" domain="[('bank_id', '=', bank_id), ('bu_id','=',bu_id)]"  editable="False" options="{'no_create':True, 'edit':False}"  attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                                <field name="account_number" readonly="1"  attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                            
+                                            </group>
+                                            <group>
+                                                <separator string="Check Information" style="margin-bottom:20px;" colspan="2"/>
+                                                   <field name="expense_check" readonly="1" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                                   <field name="check_number" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                                                   <field name="check_date" attrs="{'readonly': [('state', '=', 'done')]}"/> 
+                                                   <field name="check_state" class="oe_read_only"/> 
+                                                   <!--<field name="check_amount" attrs="{'readonly': [('state', '=', 'done')]}"/> -->
+                                                   <separator style="margin-top:22px;" colspan="2"/>
+                                            </group>
+                                        </group>
+
+                                       <group colspan="2">
+                                            <group>
+                                               <separator string="Reference" style="margin-bottom:20px;" colspan="2"/>
+                                                <field name="vendor" invisible="0"  editable="False" options="{'no_create':True, 'edit':False}"  attrs="{'readonly': [('state', '=', 'done')]}"  domain="[('supplier','=',True)]"/>
+                                                <field name="source_payable"/>
+                                                <field name="currency_id" invisible="1"/>
+                                                <field name="soa_id"  editable="False" options="{'no_create':True, 'edit':False}"  attrs="{'readonly': [('state', '=', 'done')], 'invisible':[('source_payable','=','payable')]}" domain="[('vendor', '=', vendor),('state','in',['validate','pay'])]"/><!--   ,('state','=','validate') -->
+                                                <field name="check_accounted_personel"  attrs="{'readonly': [('state', '=', 'done')]}" domain="[('supplier','=',True)]"/>
+                                                
+
+                                                <field name="trans_budget" class="oe_edit_only" invisible="1"/>
+                                                <field name="total_trans_amount" class="oe_edit_only" invisible="1"/>
+
+                                               <field name="payable_id" editable="False" options="{'no_create':True, 'edit':False}" invisible="1"/>
+                                               <field name="payable_purpose" invisible="1"/>
+                                               <field name="payable_cost" invisible="1"/>
+                                               <field name="payable_request_reference" editable="False" options="{'no_create':True, 'edit':False}" invisible="1"/>
+                                               <field name="reference_type" invisible="1"/>
+                                            </group>
+                                            <group>
+                                                <separator string="Accounting Reference" style="margin-bottom:20px;" colspan="2"/>
+                                                   <field name="journal_entry_id" class="oe_read_only"  attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                                   <field name="journal_id" class="oe_edit_only"  attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                                   <field name="credit_entry"  attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                                   <field name="for_efo" invisible="1"/>
+                                                   <field name="efo_request_id" invisible="1"/>
+                                            </group>
+                                        </group>
+                                    </group>
+                                        <notebook>
+                                           
+                                            <page string="Included Payables">
+                                                <field name="soa_payable_list"  attrs="{'readonly': [('state', '=', 'done')]}">
+                                                 <tree editable="bottom">
+
+                                                        <field name="expense_id" invisible="1"/>
+                                                        <field name="payable_id"/>
+                                                        <field name="receipt" readonly="1"/>
+                                                        <field name="currency_id" invisible="1"/>
+                                                        <field name="payable_cost" invisible="1"/>
+                                                        <field name="payable_tax_used" invisible="1"/>
+                                                        <field name="payable_uncatered_cost"/>
+                                                        <!-- <field name="to_be_catered"/> -->
+                                                        <field name="payable_catered_cost" invisible="1"/>
+                                                        <field name="untaxed_amount_to_cater"/>
+                                                        <field name="tax_value"/>
+                                                        <field name="taxed_amount_to_cater"/>
+                                                        
+
+<!-- 
+                                                        <field name="soa_vendor" invisible="1"/>
+                                                        <field name="payable_id" dsomain="[('vendor_id','=', soa_vendor),('state','=','open')]" editable="False" options="{'no_create':True, 'edit':False}"/>
+                                                        <field name="payable_receipt_number"/>
+                                                        <field name="payable_type"/>
+                                                        <field name="payable_usage"/>                                                        
+                                                        <field name="payable_cost"/>
+                                                        <field name="to_be_catered"/>
+                                                        <field name="non_taxed_catered_value"/>
+                                                        <field name="payable_cost_after_vat" invisible="1"/>
+                                                        <field name="payable_cost_of_vat" invisible="1"/>
+                                                        <field name="tax_used" string="Taxes Used"  widget="many2many_tags"/>
+                                                        <field name="catered_tax_amount"/>   -->                          
+                                                        
+                                                        
+                                                </tree>
+                                                </field>
+                                            </page> 
+                                             <page string="Journal Items">
+                                                <field name="journal_item" mode="tree" options="{'no_create':True}" attrs="{'readonly': [('state', '=', 'done')]}">
+                                                    <tree editable="bottom" create="false">
+                                                    <!-- <field name="payable_id" invisible="1"/> -->
+                                                    <field name="account_id"/>
+                                                    <field name="currency_id" invisible="1"/>
+                                                    <field name="partner_id"/>
+                                                    <field name="name"/>
+                                                    <field name="debit" sum="Total Debit"/>
+                                                    <field name="credit" sum="Total Debit"/>
+                                                    <!-- <field name="date_maturity"/>  -->
+                                                </tree> 
+                                                </field>
+                                            </page>
+                                             <page string="S.O.A. Included Payables" invisible="1"> 
+                                                <field name="soa_list"  options="{'no_create':True}" attrs="{'readonly': [('state', '=', 'done')]}">
+                                                 <tree editable="bottom" create="false">
+                                                        <field name="soa_id" invisible="1"/>
+                                                        <field name="soa_vendor" invisible="1"/>
+                                                        <field name="payable_id" dsomain="[('vendor_id','=', soa_vendor),('state','=','open')]" editable="False" options="{'no_create':True, 'edit':False}"/>
+                                                        <field name="payable_receipt_number"/>
+                                                        <!-- <field name="payable_type"/> -->
+                                                        <!-- <field name="payable_usage"/>  -->                                                       
+                                                        <field name="payable_cost"/>
+                                                        <field name="to_be_catered"/>
+                                                        <field name="non_taxed_catered_value"/>
+                                                        <field name="payable_cost_after_vat" invisible="1"/>
+                                                        <field name="payable_cost_of_vat" invisible="1"/>
+                                                        <field name="tax_used" string="Taxes Used"  widget="many2many_tags"/>
+                                                        <field name="catered_tax_amount"/>                            
+                                                        
+                                                        <field name="cater_value"/>
+                                                </tree>
+                                                </field>
+                                            </page> 
+                                        </notebook>
+                                        <group>
+                                            <group class="oe_subtotal_footer oe_right">
+                                                        <field name="payable_base_total" string="Total Payable Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/> 
+                                                        <field name="catered_base_total" string="Payables' Amount to Cater" widget="monetary" options="{'currency_field': 'currency_id'}"/> 
+                                                        <!-- <field name="total_amount_after_vat" string="Total after VAT removed" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="1"/> -->
+                                                        <!-- <field name="total_tax" string="Additional Taxes" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="1"/> -->
+                                                        <field name="amount_of_catered_tax" string="Computed Taxes" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                        <div class="oe_subtotal_footer_separator oe_inline">
+                                                            <label for="check_amount" string="Check Amount" />
+                                                        </div> 
+                                                        <field name="check_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                        </group>  
+                                        </group>
+                                         
+                                </sheet>
+                                 <div class="oe_chatter">
+                                <field name="message_follower_ids" widget="mail_followers"/>
+                                <field name="message_ids" widget="mail_thread"/>
+                            </div>
+
+                         </form>
+
+                    </field>
+                </record>
+
+
+            <record model="ir.ui.view" id="access_config_form">
+
+                <field name="name">access_config_form</field>
+                <field name="model">mgc.expense.access.configuration</field>
+                <field name="arch" type="xml">
+
+                     <form name="Enter Access Information">
+                            <!--<header> ... content of the status bar  ... </header>-->
+                            <sheet name="Enter Access Information">
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="access_type"/>
+                                        <field name="dbname"/>
+                                        <field name="server_ip"/>
+                                        <field name="port_number"/>
+                                        <field name="username" password="True"/>
+                                        <field name="password" password="True"/>
+                                    </group>
+                            </sheet>
+
+                     </form>
+
+                </field>
+            </record>
+
+        <record id="soa_tree_view" model="ir.ui.view">
+            <field name="name">Checks_tree</field>
+            <field name="model">mgc.expense.soa</field>
+            <field name="arch" type="xml">
+                <tree string="name" create="false">
+                                <field name="name"/>
+                                <field name="vendor"/>
+                                <field name="total_amount" widget="monetary"/>
+                                <field name="total_tax" widget="monetary"/>
+                                <field name="balance_total" widget="monetary"/>
+                                <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+           
+            <record model="ir.ui.view" id="soa_form">
+
+                <field name="name">access_config_form</field>
+                <field name="model">mgc.expense.soa</field>
+                <field name="arch" type="xml">
+
+                     <form name="Statement of Accounts">
+                            <!--<header> ... content of the status bar  ... </header>-->
+                            <header>  
+                                <button 
+                                    state="draft"
+                                    class="oe_inline oe_highlight" 
+                                    type="object"
+                                    name="confirm_soa" 
+                                    string="Confirm"  
+                                    confirm="Are you sure you want to confirm the SOA?"
+                                    groups="mgc_expense_kneco_external.group_payable_supervisor"
+                                    attrs="{'invisible':[('state','in',['confirm','validate','tag','paid','cancel'])]}"
+                                    /> 
+                                
+                                <button 
+                                    state="confirm"
+                                    class="oe_inline oe_highlight" 
+                                    type="object"
+                                    name="validate_soa" 
+                                    string="Validate"  
+                                    confirm="Are you sure you want to validate the SOA?"
+                                    groups="mgc_expense_kneco_external.group_payable_supervisor"
+                                    attrs="{'invisible':[('state','!=','confirm')]}"
+                                    />
+
+                                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,tag,validate,pay,paid"/>
+                                
+                                </header> 
+                            
+
+                            <sheet name="Statement Of Accounts">
+                                
+
+                                <div class="oe_title" style="margin-bottom: 10px;" >
+                                    <label for="soa_code" class="oe_read_only"/>
+                                    <h1>
+                                        <field name="soa_code" class="oe_read_only" placeholder="Provide the expense id"/>
+                                    </h1>
+                                </div>
+                                    <group colspan="2">
+                                        <group> 
+                                            <field name="vendor" readonly="1"/>
+                                        </group>
+                                        <group> 
+                                            <field name="vendor_tin" editable="False" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')],}"/>
+                                           <!--  <field name="vendor_reputation" editable="False" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')],}"/> -->
+                                            <field name="default_term" editable="False" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')],}"/>
+                                            <field name="vendor_vat" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')],}"/>
+                                            <field name="vendor_name" invisible="1"/>
+
+                                        </group>
+                                    </group>
+                                    <notebook>
+                                            <page string="Included Payables">
+                                                <field name="included_payables" mode="tree" options="{'no_create':True}">
+                                                    <tree  editable="bottom" create="false">
+                                                        <field name="soa_id" invisible="1"/>
+                                                        <field name="soa_vendor" invisible="1"/>
+                                                        <field name="payable_id" domain="[('vendor_id','=', soa_vendor),('state','=','open')]" editable="False" options="{'no_create':True, 'edit':False}" readonly="1"/>
+                                                        <field name="payable_receipt_number" readonly="1"/>
+                                                        <!-- <field name="payable_type"/> -->
+                                                        <field name="payable_usage" readonly="1"/>                                                        
+                                                        <field name="payable_cost" readonly="1"/>
+                                                        <field name="to_be_catered" attrs="{'readonly':[('state','in',['confirm','valid','paid'])]}"/>
+                                                        <field name="non_taxed_catered_value" attrs="{'readonly':[('state','in',['confirm','valid','paid'])]}"/>
+                                                        <field name="payable_cost_after_vat" invisible="1"/>
+                                                        <field name="payable_cost_of_vat" invisible="1"/>
+                                                        <field name="tax_used" string="Withholding Tax Rate"  widget="many2many_tags" editable="False" options="{'no_create':True, 'edit':False}"   attrs="{'readonly':[('state','in',['validate','tag', 'pay', 'paid'])]}"/> 
+                                                        <field name="tax_amount" invisible="1"/>
+                                                        <field name="catered_tax_amount" attrs="{'readonly':[('state','in',['valid','paid'])]}"/>
+                                                        <field name="catered_tax_amount_dummy" invisible="1"/>
+                                                        <field name="cater_value" invisible="1"/>
+                                                        <field name="tax_cater_status" readonly="1"/> 
+                                                           
+                                                        <field name="state" invisible="1"/>
+                                                    </tree>
+                                                </field>
+
+                                                <group colspan="2" class="oe_subtotal_footer" style="margin-left:40px;" attrs="{'invisible':[('state','=','paid')]}">
+                                                        <field name="total_to_cater_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/> 
+                                                        <field name="total_to_cater_amount_after_vat" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="1"/>
+                                                        <field name="total_to_cater_tax" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="1"/>
+                                                        <field name="total_to_cater_tax_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                        <div class="oe_subtotal_footer_separator oe_inline">
+                                                            <label for="balance_to_cater_total"/>
+                                                        </div> 
+                                                        <field name="balance_to_cater_total"  nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                </group> 
+                                            </page> 
+                                            <page string="Conducted Payments for the S.O.A" readonly="1">
+                                                <field name="disbursement_list" mode="tree" options="{'no_create':True}" create="false'" readonly="1">
+                                                   <!--  <tree  editable="bottom" create="false">
+                                                        <field name="soa_id" invisible="1"/>
+                                                        <field name="soa_vendor" invisible="1"/>
+                                                        <field name="payable_id" domain="[('vendor_id','=', soa_vendor),('state','=','open')]" editable="False" options="{'no_create':True, 'edit':False}" readonly="1"/>
+                                                        <field name="payable_receipt_number" readonly="1"/>
+                                                       
+                                                        <field name="payable_usage" readonly="1"/>                                                        
+                                                        <field name="payable_cost" readonly="1"/>
+                                                        <field name="to_be_catered"/>
+                                                        <field name="non_taxed_catered_value"/>
+                                                        <field name="payable_cost_after_vat" invisible="1"/>
+                                                        <field name="payable_cost_of_vat" invisible="1"/>
+                                                        <field name="tax_used" string="Taxes Used"  widget="many2many_tags" editable="False" options="{'no_create':True, 'edit':False}" attrs="{'readonly':[('state','=','valid')]}"/> 
+                                                        <field name="tax_amount"/>
+                                                        <field name="catered_tax_amount"/>
+                                                        <field name="cater_value" invisible="1"/>
+                                                           
+                                                        <field name="state" invisible="1"/>
+                                                    </tree> -->
+                                                </field>
+                                            </page> 
+                                    </notebook>
+                                    <group style="margin-top:50px;">
+                                           <!-- ==============================================================================================================    -->
+                                                <group colspan="2" class="oe_subtotal_footer" style="margin-left:40px;" attrs="{'invisible':[('state','=', 'paid')]}">
+                                                        <field name="total_untaxed_catared" widget="monetary" options="{'currency_field': 'currency_id'}"/> 
+                                                        <field name="total_all_tax_amount" string="Catered Tax Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                        <div class="oe_subtotal_footer_separator oe_inline">
+                                                            <label for="total_taxed_catered" string="Catered Taxed Amount"/>
+                                                        </div> 
+                                                        <field name="total_taxed_catered"  nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                </group> 
+                                                
+                                                <!-- =========================================s============================================================    -->
+                                                
+                                                <group colspan="2" class="oe_subtotal_footer oe_right" >
+                                                        <field name="total_amount" string="Total Amount to be Paid" widget="monetary" options="{'currency_field': 'currency_id'}"/> 
+                                                        <field name="total_amount_after_vat" string="Total after VAT removed" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="1"/>
+                                                        <field name="total_tax" string="Additional Taxes" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="1"/>
+                                                        <field name="total_tax_amount" string="Total Withholding Tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                        <div class="oe_subtotal_footer_separator oe_inline">
+                                                            <label for="balance_total" string="Total Amount for Disbursement"/>
+                                                        </div> 
+                                                        <field name="balance_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                </group>  
+                                    </group>
+                            </sheet>
+                             <div class="oe_chatter">
+                                <field name="message_follower_ids" widget="mail_followers"/>
+                                <field name="message_ids" widget="mail_thread"/>
+                            </div>
+                     </form>
+                </field>
+            </record>
+            
+
+
+            <record id="vendors_tree_view" model="ir.ui.view">
+                <field name="name">Checks_tree</field>
+                <field name="model">mgc.expense.vendors</field>
+                <field name="arch" type="xml">
+                    <tree string="name" create="false">
+                                    <field name="name"/>
+                                    <field name="payable_quantity"/>
+                                    <field name="payable_cost" widget="monetary"/>
+                                    <field name="payable_balance" widget="monetary"/>
+                    </tree>
+                </field>
+            </record>
+
+<!--             <record model="ir.ui.view" id="vendors_kanban_view">
+                    <field name="name">Vendors</field>
+                    <field name="model">mgc.expense.vendors</field>
+                    <field name="type">kanban</field>
+                    <field name="arch" type="xml">
+                        <kanban class="oe_background_grey" create="0">
+                            <field name="name"/>
+                            <field name="payable_quantity"/>
+                            <field name="payable_cost"/>
+                            <field name="payable_balance"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                     <div>
+                                         <p><field name="name"/></p>
+                                         <p><field name="payable_quantity"/></p>
+                                         <p><field name="payable_cost" widget="monetary"/></p>
+                                         <p><field name="payable_balance"/></p>
+                                     </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </record> -->
+
+                <!-- 
+                        <kanban class="oe_background_grey o_kanban_dashboard o_salesteam_kanban o_project_kanban " create="0">
+       <field name="color"/>
+       <field name="name"/>
+       <templates>
+          <span t-name="kanban-box"> 
+             <div t-attf-class="#{kanban_color(record.color.raw_value)} ">
+                <div class="o_project_kanban_manage">
+                   <a class="o_kanban_manage_toggle_button" href="#">More
+                       <i class="fa fa-caret-down"/>
+                    </a>
+                </div>
+                <div class="o_project_kanban_main" >
+                  <div class="o_kanban_card_content o_visible">
+                      <div class="o_kanban_primary_left" >
+                          <div class="">
+                              <center>
+                                 <span>
+                                    <span t-field="record.name"/>
+                                  </span>
+                              </center>
+                           </div>
+                            <div>
+                            <center>
+                               <button class="btn btn-primary" type="action" name="dashboard_sales_action_id" string="Quotations">Quotations</button>
+                                    <button class="btn btn-primary" type="action" name="dashboard_sales_order_action_id" >Sales order</button>
+                                    <h3>Custom Dashboard for Sales</h3>
+                               </center>
+                                </div>
+                            </div>
+                        </div>
+                     <div class="o_kanban_card_manage_pane o_invisible">
+                         <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
+                             <div class="o_kanban_card_manage_title">
+                                 <span>View</span>
+                             </div>
+                            </div>
+                          <div t-if="widget.editable" class="o_project_kanban_colorpicker" >
+                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                          </div>
+                     </div>
+                   </div>
+                </div>
+            </span>
+        </templates>
+    </kanban>
+
+                 -->
+
+
+
+            <record model="ir.ui.view" id="expense_vendor_form">
+
+                <field name="name">access_config_form</field>
+                <field name="model">mgc.expense.vendors</field>
+                <field name="arch" type="xml">
+
+                     <form name="Statement of Accounts">
+                            <header><button string="Print Report" class="oe_highlight"/><button name="action_confirm" string="Display"/> </header>
+                            <sheet name="Statement Of Accounts">
+                                
+                                <div class="oe_title" style="margin-bottom: 10px;" >
+                                    <label for="name" class="oe_read_only"/>
+                                    <h1>
+                                        <field name="name" class="oe_read_only" placeholder="Provide the expense id"/>
+                                    </h1>
+                                </div>
+                                    <!-- <group colspan="2">
+                                        <group> 
+                                            <field name="vendor_id" editable="False" otions="{'no_create':True, 'edit':False}"/>
+                                         
+                                        </group>
+                                        <group> 
+                                            <field name="vendor_tin" editable="False"/>
+                                            <field name="vendor_reputation" editable="False" />
+                                            <field name="vendor_vat" editable="False"/>
+
+                                        </group>
+                                    </group> -->
+                                    <group class="oe_subtotal_footer" style="margin-right:40px;">
+                                                        <field name="payable_quantity" string="Pending Payable/s"/>
+                                                        <field name="payable_cost" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                                                        <field name="payable_balance" widget="monetary" options="{'currency_field': 'currency_id'}" />
+
+                                </group>
+                                    <notebook>
+                                            <page string="Included Payables">
+                                                <field name="payables">
+                                                    <tree  editable="bottom" decoration-success="state == 'paid'" decoration-info="state =='tag' or state == 'open'">
+                                                        <field name="name" readonly="1" /> 
+                                                        <field name="expense_type" readonly="1"/> 
+                                                        <field name="create_date" string="Date Prepared"  widget="date" readonly="1"/> 
+                                                        <field name="tax_ids" widget="many2many_tags" string="Taxed With" editable="False" options="{'no_create':True, 'edit':False}"/>
+                                                         <field name="total_tax_amount_value"/> 
+                                                        <field name="amount" readonly="1" string="Payable Cost (Untaxed)"/> 
+                                                        <field name="catered_untaxed_amount" string="Already Paid Value (Untaxed)" readonly="1"/> 
+                                                        <field name="state" readonly="1"/> 
+                                                    <!-- 
+                                                        <field name=""/> 
+                                                        <field name=""/> 
+                                                        <field name=""/> 
+                                                        <field name=""/> 
+                                                        <field name=""/> 
+                                                        <field name=""/>  
+                                                    -->
+
+                                                    </tree>
+                                                </field>
+                                                <!-- <group class="oe_subtotal_footer oe_right">
+                                                        <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                        <field name="total_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                        <div class="oe_subtotal_footer_separator oe_inline">
+                                                            <label for="balance_total"/>
+                                                        </div> 
+                                                        <field name="balance_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                </group>   -->
+                                            </page> 
+                                        </notebook>
+                            </sheet>
+
+                     </form>
+
+                </field>
+            </record>
+
+
+            <record id="liquidation_tree_view" model="ir.ui.view">
+                <field name="name">Checks_tree</field>
+                <field name="model">mgc.expense.liquidation</field>
+                <field name="arch" type="xml">
+                    <tree string="name" create="false">
+                                    <field name="name"/>
+                                    <field name="request_number"/>
+                                    <field name="requester"/>
+                                    <field name="request_purpose"/>
+                                    <field name="expense_id"/>
+                                    <field name="bank_source"/>
+                                    <field name="check_id"/>
+                                    <field name="expense_amount" widget="monetary"/>
+                                    <field name="state"/>
+                                    <!-- <field name=""/>
+                                    <field name="payable_cost" />
+                                    <field name="payable_balance" widget="monetary"/> -->
+                    </tree>
+                </field>
+            </record>
+
+            <record model="ir.ui.view" id="liquidation_form">
+
+                <field name="name">access_config_form</field>
+                <field name="model">mgc.expense.liquidation</field>
+                <field name="arch" type="xml">
+
+                     <form name="Liquidation">
+                            <header><!-- <button name="test_con" type="object" string="Test"/> attrs="{'invisible':[('state','!=','check')]}"-->
+                                    <button 
+                                    states="confirm"  
+                                    class="oe_inline oe_highlight" 
+                                    type="object"
+                                    name="validate_liquidation" 
+                                    string="Validate"  
+                                    confirm="Are you sure you want to validate this liquidation?"
+                                    /> 
+                                    <field name="state" widget="statusbar" statusbar_visible="draft,check,confirm,valid"/>
+                            </header>
+                            <sheet name="Enter Access Information">
+                                <div class="oe_title" style="margin-bottom: 10px;" >
+                                    <label for="name" class="oe_read_only"/>
+                                    <h1>
+                                        <field name="name" class="oe_read_only" placeholder="Provide the expense id"/>
+                                    </h1>
+                                </div>
+                                <group>
+                                     <group>
+                                        <separator string="Request Reference Information" style="margin-bottom:15px;" colspan="2"/>
+                                        <field name="request_number" readonly="1"/>
+                                        <field name="request_date" readonly="1"/>
+                                        <field name="requester" readonly="1"/>
+                                        <field name="request_purpose"/>
+                                        <!-- 
+                                        <separator string="" style="margin-bottom:15px;"/>
+                                        <field name=""/>
+                                        <field name="total_fund_used"/> -->
+                                        <separator string="Other References" style="margin-bottom:15px; margin-top:22px; font-size:16px;" colspan="2"/>
+                                        <field name="expense_id" readonly="1"/>
+                                        <field name="expense_vendor" readonly="1"/>
+                                    </group>
+                                    <group>
+                                        <separator string="Fund Information" style="margin-bottom:15px;" colspan="2"/>
+                                        <field name="bank_source" readonly="1"/>
+                                        <field name="check_id" readonly="1"/>
+
+                                        <separator string="Amount Details" style="margin-bottom:15px; margin-top:22px; font-size:16px;" colspan="2"/>
+                                        <field name="req_advance_amount" readonly="1"/>
+                                        <field name="req_expended_amount" readonly="1"/>
+                                        <field name="req_unexpended_amount" readonly="1"/>
+                                        <field name="req_reimburse_amount" readonly="1"/>
+                                    </group>
+                                </group>
+                                   
+                                    <notebook>
+                                        <page string="Items for Liquidation">
+                                            <field name="liquidation_line" readonly="1">
+                                                <tree>
+
+                                                    <field name="liquidation_id" invisible="1"/>
+                                                    <field name="description"/>
+                                                    <field name="or_number"/>
+                                                    <field name="or_date"/>
+                                                    <field name="amount_budgeted"/>
+                                                    <field name="amount_spent"/>
+                                                    <field name="amount_balance"/>
+                                                    <field name="amount_status"/>
+                                                </tree>
+                                            </field>
+                                        </page>
+                                    </notebook>
+                            </sheet>
+                             <div class="oe_chatter">
+                                <field name="message_follower_ids" widget="mail_followers"/>
+                                <field name="message_ids" widget="mail_thread"/>
+                            </div>
+
+                     </form>
+
+                </field>
+            </record>
+
+
+            <record model="ir.ui.view" id="default_journal_form">
+
+                <field name="name">access_config_form</field>
+                <field name="model">mgc.expense.base.cash.type.journal</field>
+                <field name="arch" type="xml">
+
+                     <form name="Default Journal">
+                            <header></header>
+                            <sheet name="Enter Access Information">
+                                <div class="oe_title" style="margin-bottom: 10px;" >
+                                    <label for="name" class="oe_read_only"/>
+                                    <h1>
+                                        <field name="name" class="oe_read_only" placeholder="Provide the expense id"/>
+                                    </h1>
+                                </div>
+                                    <group>
+                                        <field name="journal_id"/>
+                                        <field name="bind_for"/>
+                                        <field name="account_entry"/>
+                                    </group>
+                            </sheet>
+
+                     </form>
+
+                </field>
+            </record>
+
+
+            <record id="credit_memo_tree_view" model="ir.ui.view">
+                <field name="name">Credit Memo</field>
+                <field name="model">mgc.expense.credit_memo</field>
+                <field name="arch" type="xml">
+                    <tree string="name">
+                                    <field name="name"/>
+                                    <field name="vendor"/>
+                                    <!-- <field name="payable_id"/> -->
+                                    <!-- <field name="reason"/> -->
+                                    <field name="create_date"/>
+                                    <!-- <field name="amount" widget="monetary"/> -->
+                                    <field name="state"/>
+                    
+                    </tree>
+                </field>
+            </record>
+             <record model="ir.ui.view" id="credit_memo_form">
+
+                <field name="name">access_config_form</field>
+                <field name="model">mgc.expense.credit_memo</field>
+                <field name="arch" type="xml">
+
+                     <form name="Liquidation">
+                            <header><!-- <button name="test_con" type="object" string="Test"/> attrs="{'invisible':[('state','!=','check')]}"-->
+                                   <!--  <button 
+                                    states="confirm"  
+                                    class="oe_inline oe_highlight" 
+                                    type="object"
+                                    name="validate_liquidation" 
+                                    string="Validate"  
+                                    confirm="Are you sure you want to validate this liquidation?"
+                                    />  -->
+                                    <field name="state" widget="statusbar" statusbar_visible="draft,check,valid"/>
+                            </header>
+                            <sheet name="Credit Memo">
+                                <div class="oe_title" style="margin-bottom: 10px;" >
+                                    <label for="name" class="oe_read_only"/>
+                                    <h1>
+                                        <field name="name" class="oe_read_only" placeholder="Provide the expense id"/>
+                                    </h1>
+                                </div>
+                                <group>
+                                     
+                                        <group>
+                                            <separator string="References" style="margin-bottom:15px;" colspan="2"/>
+                                            <field name="vendor"/>
+                                            <field name="account_entry"/>
+                                            <field name="create_date" readonly="1" class="oe_read_only"/>  
+                                        </group>
+                                        <group>
+                                        </group>
+                                    </group>
+                                    <notebook>
+                                        <page string="Payables Included">
+                                            <field name="payable_line">
+                                                <tree edit="bottom">
+                                                    <field name="memo_id" invisible="1"/>
+                                                    <field name="payable_id"/>
+                                                    
+                                                    <field name="amount" widget="monetary"/>
+                                                    <field name="reason"/>        
+                                                </tree>
+                                            </field>
+                                        </page>
+                                    </notebook>
+                            </sheet>
+                             <div class="oe_chatter">
+                                <field name="message_follower_ids" widget="mail_followers"/>
+                                <field name="message_ids" widget="mail_thread"/>
+                            </div>
+
+                     </form>
+
+                </field>
+            </record>
+
+
+<record id="channel_dashboard_kanban_view" model="ir.ui.view">
+  <field name="name">custom.sales.dashboard.view</field>
+  <field name="model">custom.sales.dashboard</field>
+  <field name="arch" type="xml">
+    <kanban class="oe_background_grey o_kanban_dashboard o_salesteam_kanban o_project_kanban " create="0">
+       <field name="color"/>
+       <field name="name"/>
+       <templates>
+          <span t-name="kanban-box"> <!-- Use <t> tag instead of <span> for color change -->
+             <div t-attf-class="#{kanban_color(record.color.raw_value)} ">
+                <div class="o_project_kanban_manage">
+                   <a class="o_kanban_manage_toggle_button" href="#">More
+                       <i class="fa fa-caret-down"/>
+                    </a>
+                </div>
+                <div class="o_project_kanban_main" >
+                  <div class="o_kanban_card_content o_visible">
+                      <div class="o_kanban_primary_left" >
+                          <div class="">
+                              <center>
+                                 <span>
+                                    <span t-field="record.name"/>
+                                  </span>
+                              </center>
+                           </div>
+                            <div>
+                            <center>
+                               <button class="btn btn-primary" type="action" name="dashboard_sales_action_id" string="Quotations">Quotations</button>
+                                    <button class="btn btn-primary" type="action" name="dashboard_sales_order_action_id" >Sales order</button>
+                                    <h3>Custom Dashboard for Sales</h3>
+                               </center>
+                                </div>
+                            </div>
+                        </div>
+                     <div class="o_kanban_card_manage_pane o_invisible">
+                         <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
+                             <div class="o_kanban_card_manage_title">
+                                 <span>View</span>
+                             </div>
+                            </div>
+                          <div t-if="widget.editable" class="o_project_kanban_colorpicker" >
+                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                          </div>
+                     </div>
+                   </div>
+                </div>
+            </span>
+        </templates>
+    </kanban>
+  </field>
+</record>
+
+
+<record id="channel_dashboard_form_view" model="ir.ui.view">
+      <field name="name">custom.sales.dashboard.form.view</field>
+      <field name="model">custom.sales.dashboard</field>
+     <field name="arch" type="xml">
+           <form>
+               <field name="color"/>
+               <field name="name"/>
+          </form>
+     </field>
+ </record>
+
+ <record id="custom_sales_dashboard_action" model="ir.actions.act_window">
+    <field name="name">Dashboard</field>
+    <field name="res_model">custom.sales.dashboard</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="view_type">form</field>
+    <field name="context">{}</field>
+    <field name="view_mode">kanban,form</field>
+</record>
+
+    <record model="ir.ui.view" id="my_credit_limit_wizard">
+        <field name="name">Confirming Sale Order When Credit is Over Limit</field>
+        <field name="model">sale.control.limit.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Transaction">
+             <!--    <group>
+                    <span>The following customer is about or exceeded their credit limit. This operation needs an Authorized Employee to approve the sale order:</span>
+                </group> -->
+                <group>
+                  <field name="company_id"/>  
+                  <field name="tax_month_start"/>
+                  <field name="tax_month_end"/>
+                  <!-- <field name="include_pending"/> -->
+                  <field name="include_untax"/>
+                </group> 
+                <footer> 
+                    <button  string="Print" name="print_transaction" type="object" class="oe_highlight" />
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="expense_vendor_ledger_wizard">
+        <field name="name">Vendor Ledger</field>
+        <field name="model">mgc.vendor.ledger.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Vendor Ledger">
+             <!--    <group>
+                    <span>The following customer is about or exceeded their credit limit. This operation needs an Authorized Employee to approve the sale order:</span>
+                </group> -->
+                <group>
+                  <field name="company_id"/>  
+                  <field name="month_start"/>
+                  <field name="month_end"/>
+                  <!-- <field name="include_pending"/> -->
+                  <!-- <field name="include_untax"/> -->
+                </group> 
+                <footer> 
+                    <button  string="Print"  name="print_ledger"  type="object" class="oe_highlight" /><!-- name="print_transaction" -->
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+        <record model="ir.ui.view" id="expense_aged_payable_wizard">
+        <field name="name">Aged Payable</field>
+        <field name="model">mgc.aged.payable.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Vendor Ledger">
+             <!--    <group>
+                    <span>The following customer is about or exceeded their credit limit. This operation needs an Authorized Employee to approve the sale order:</span>
+                </group> -->
+                <group>
+                  <field name="sort_by_type"/>  
+                  <field name="sort_by_payable_type"/>
+                  <!-- <field name="month_end"/> -->
+                  <!-- <field name="include_pending"/> -->
+                  <!-- <field name="include_untax"/> -->
+                </group> 
+                <footer> 
+                    <button  string="Print"  name="print_aging"  type="object" class="oe_highlight" /><!-- name="print_transaction" -->
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+        <!-- ======================================================================== -->
+
+        <record model="ir.actions.act_window" id="course_list_action">
+            <field name="name">Payables</field>
+            <field name="res_model">mgc.expense.base</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add an Payable
+                </p>
+            </field>
+        </record >
+<!--         <record model="ir.actions.act_window" id="payabe_test_action">
+            <field name="name">Payables Test</field>
+            <field name="res_model">mgc.expense.base</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="arch" type="html">
+                <div>dsdsdsdsds</div>
+            </field>
+        </record > -->
+        <record model="ir.actions.act_window" id="shared_payable_action">
+            <field name="name">Shared Payables</field>
+            <field name="res_model">mgc.expense.base</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_shared', '=', True )]</field> 
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add an Payable
+                </p>
+            </field>
+        </record >
+
+        <record model="ir.actions.act_window" id="expense_list_action">
+            <field name="name">Disbursement</field>
+            <field name="res_model">mgc.expense.transactions</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add an expense
+                </p>
+            </field>
+        </record >
+
+        <record model="ir.actions.act_window" id="soa_list_action">
+            <field name="name">Statement of Accounts</field>
+            <field name="res_model">mgc.expense.soa</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add an expense
+                </p>
+            </field>
+        </record >
+
+        <record model="ir.actions.act_window" id="credit_memo_list_action">
+            <field name="name">Credit Memo</field>
+            <field name="res_model">mgc.expense.credit_memo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a Credit Memo
+                </p>
+            </field>
+        </record >
+        
+        <!-- <record model="ir.actions.act_window" id="bank_list_action">
+            <field name="name">Included Banks</field>
+            <field name="res_model">res.bank</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a bank
+                </p>
+            </field>
+        </record > -->
+        <record model="ir.actions.act_window" id="bank_list_action">
+            <field name="name">Included Banks</field>
+            <field name="res_model">mgc.expense.banks</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a bank
+                </p>
+            </field>
+        </record >   
+        <record model="ir.actions.act_window" id="check_list_action">
+            <field name="name">Prepared Checks</field>
+            <field name="res_model">mgc.expense.checks</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Ceate a check
+                </p>
+            </field>
+        </record >
+        <record model="ir.actions.act_window" id="bank_acct_list_action">
+            <field name="name">Bank Accounts</field>
+            <field name="res_model">mgc.expense.bank_accounts</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a bank account
+                </p>
+            </field>
+        </record >
+
+          <!-- <record model="ir.actions.act_window" id="bank_acct_list_action">
+            <field name="name">Bank Accounts</field>
+            <field name="res_model">account.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a bank account
+                </p>
+            </field>
+        </record > -->
+        <record model="ir.actions.act_window" id="bu_list_action">
+            <field name="name">Business Units</field>
+            <field name="res_model">mgc.expense.bu</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a business unit
+                </p>
+            </field>
+        </record >
+
+        <record model="ir.actions.act_window" id="acct_list_action">
+            <field name="name">Expense Type (Accounts)</field>
+            <field name="res_model">mgc.expense.accounts.ext</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a expense type (this will be considered as an account entry)
+                </p>
+            </field>
+        </record >
+
+        <record model="ir.actions.act_window" id="access_config_action">
+            <field name="name">Configuration</field>
+            <field name="res_model">mgc.expense.access.configuration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add an expense access
+                </p>
+            </field>
+        </record >
+
+        <record model="ir.actions.act_window" id="expense_liquidation_action">
+            <field name="name">Liquidition</field>
+            <field name="res_model">mgc.expense.liquidation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add an expense Liquidation
+                </p>
+            </field>
+        </record >
+        
+        <record model="ir.actions.act_window" id="expense_default_journal_action">
+            <field name="name">Default Journal</field>
+            <field name="res_model">mgc.expense.base.cash.type.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add an expense Liquidation
+                </p>
+            </field>
+        </record >
+
+        <record model="ir.actions.act_window" id="expense_vendors_action">
+            <field name="name">Vendors</field>
+            <field name="res_model">mgc.expense.vendors</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Add a Vendor
+                </p>
+            </field>
+        </record >
+
+        <record model="ir.actions.act_window" id="test_action">
+            <field name="name">Purchase Transaction</field>
+            <field name="res_model">sale.control.limit.wizard</field>
+            <field name="target">new</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record >
+        <record model="ir.actions.act_window" id="vendor_ledger_action">
+            <field name="name">Vendor Ledger</field>
+            <field name="res_model">mgc.vendor.ledger.wizard</field>
+            <field name="target">new</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record >
+
+        <record model="ir.actions.act_window" id="aged_payable_action">
+            <field name="name">Aged Payable</field>
+            <field name="res_model">mgc.aged.payable.wizard</field>
+            <field name="target">new</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record >
+        <!-- top level menu: no parent -->
+        <menuitem id="main_openacademy_menu" name="Expenses" web_icon="mgc_expense_kneco,static/description/icon.png"/>
+        <!-- A first level in the left side menu is needed
+             before using action= attribute -->
+
+        <menuitem   id="openacademy_menu_test" 
+                    name="Payables"
+                    parent="main_openacademy_menu" 
+                    action="course_list_action" 
+                    sequence="1"
+                    groups="mgc_expense_kneco_external.group_payable_clerk,mgc_expense_kneco_external.group_payable_tax_supervisor"/>
+                    />
+        <menuitem   id="all_payable_list" 
+                    name="All Payables"
+                    parent="openacademy_menu_test" 
+                    action="course_list_action" 
+                    sequence="1" 
+                    groups="mgc_expense_kneco_external.group_payable_clerk,mgc_expense_kneco_external.group_payable_tax_supervisor"/>  
+        
+<!--         <menuitem   id="payable_test_list" 
+                    name="Payables Test"
+                    parent="openacademy_menu_test" 
+                    action="payabe_test_action" 
+                    sequence="2" 
+                    groups="mgc_expense_kneco_external.group_payable_clerk"/>  -->               
+                    <!-- , mgc_expense_kneco_external.group_payable_supervisor -->
+
+        <!-- <menuitem   id="share_exp_list" 
+                    name="with Shared Expense"
+                    parent="openacademy_menu_test" 
+                    action="shared_payable_action" 
+                    sequence="2"
+                    />    
+        <menuitem   id="with_holding_tax_list" 
+                    name="with WithHolding Taxes"
+                    parent="openacademy_menu_test" 
+                    action="course_list_action" 
+                    sequence="3"/>   --> 
+        
+        <menuitem   id="soa_list" 
+                    name="Statement of Accounts"
+                    parent="openacademy_menu_test" 
+                    action="soa_list_action" 
+                    sequence="4"
+                    groups="mgc_expense_kneco_external.group_payable_clerk,mgc_expense_kneco_external.group_payable_tax_supervisor"/>
+
+        <menuitem   id="credit_memo_list" 
+                    name="Credit Memo"
+                    parent="openacademy_menu_test" 
+                    action="credit_memo_list_action" 
+                    sequence="5"
+                    groups="mgc_expense_kneco_external.group_payable_clerk,mgc_expense_kneco_external.group_payable_tax_supervisor"/>   
+
+        <menuitem   id="vendor_list" 
+                    name="Vendors"
+                    parent="openacademy_menu_test" 
+                    action="expense_vendors_action" 
+                    sequence="6"
+                    groups="mgc_expense_kneco_external.group_payable_clerk,mgc_expense_kneco_external.group_payable_tax_supervisor"/>   
+
+        <!-- ===========================================Dis================================================   -->
+        <menuitem id="mgc_expenses_disbursement_menu" name="Disbursement"
+                  parent="main_openacademy_menu" sequence="2"
+                  groups="mgc_expense_kneco_external.group_disbursement_clerk"/> 
+        
+        <menuitem   id="openacademy_menu_expense" 
+                    name="All Disbursement"
+                    parent="mgc_expenses_disbursement_menu" 
+                    action="expense_list_action" 
+                    sequence="1"
+                    groups="mgc_expense_kneco_external.group_disbursement_clerk"/> 
+                
+<!--         <menuitem   id="mgc_expenses_check_menu" 
+                    name="Checks"
+                    parent="mgc_expenses_disbursement_menu" 
+                    action="check_list_action"
+                    groups="mgc_expense_kneco_external.group_disbursement_clerk"
+                    sequence="2"/> -->
+        
+        <menuitem   id="mgc_expenses_liquidation_menu" 
+                    name="Liquidation"
+                    parent="mgc_expenses_disbursement_menu" 
+                    action="expense_liquidation_action" 
+                    sequence="3"
+                    groups="mgc_expense_kneco_external.group_disbursement_clerk"/>
+                  
+        <menuitem id="mgc_expenses_referene_menu" name="References"
+                  parent="main_openacademy_menu" sequence="3"/>
+        <menuitem id="openacademy_menu_test2" name="Banks"
+                  parent="mgc_expenses_referene_menu" action="bank_list_action" sequence="1"
+                  groups="mgc_expense_kneco_external.group_expense_admin"/>
+        <menuitem id="mgc_expenses_bu_menu" name="Business Units"
+                  parent="mgc_expenses_referene_menu" action="bu_list_action" sequence="2"
+                  groups="mgc_expense_kneco_external.group_expense_admin"/>
+        <menuitem id="mgc_expenses_bank_acct_menu" name="Bank Accounts"
+                  parent="mgc_expenses_referene_menu" action="bank_acct_list_action" sequence="3"
+                  groups="mgc_expense_kneco_external.group_expense_admin"/>
+        
+        <!-- <menuitem id="mgc_expenses_acct_menu" name="Expense Types (Accounts)"
+                  parent="mgc_expenses_referene_menu" action="acct_list_action"/> -->
+        <!-- <menuitem id="menu_sales_config_inherited" parent= "main_openacademy_menu"  name= "Sales Test dashboard" action="custom_sales_dashboard_action"/> -->
+        <menuitem id="mgc_expenses_config_menu" name="Configuration"
+                  parent="main_openacademy_menu" sequence="6"/>
+        <menuitem id="def_journal_view" name="Default Journal"
+                  parent="mgc_expenses_config_menu" action="expense_default_journal_action" sequence="1"
+                  groups="mgc_expense_kneco_external.group_expense_admin"
+                  />
+        <menuitem id="mgc_reports_menu" name="Reports"
+                  parent="main_openacademy_menu" sequence="7"/>
+        
+        <menuitem id="test_action_menu" name="Purchase Transaction" 
+                  parent="mgc_reports_menu" action="test_action" sequence="1" 
+                  groups="mgc_expense_kneco_external.group_payable_tax_supervisor"
+                  />
+        <menuitem id="vendor_ledger_action_menu" name="Vendor Ledger" 
+                  parent="mgc_reports_menu" action="vendor_ledger_action" sequence="2" 
+                  groups="mgc_expense_kneco_external.group_payable_tax_supervisor"
+                  />
+        <menuitem id="aged_payable_action_menu" name="Aged Payable" 
+                  parent="mgc_reports_menu" action="aged_payable_action" sequence="2" 
+                  groups="mgc_expense_kneco_external.group_payable_tax_supervisor"
+                  />
+
+
+        <menuitem id="access_config_action_menu" name="Access Configuration" 
+                  parent="main_openacademy_menu" action="access_config_action" sequence="8"
+                  groups="mgc_expense_kneco_external.group_expense_admin"
+                  />
+
+    </data>
+</odoo>

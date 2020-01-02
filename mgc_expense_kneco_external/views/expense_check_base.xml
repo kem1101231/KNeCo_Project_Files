@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+            <report 
+            id="action_report_salesperson"
+            model="report.mgc_expense_kneco_external.expense_check_form"
+            string="Check Test"
+            report_type="qweb-pdf"
+            name="mgc_expense_kneco_external.expense_check_form"
+            file="mgc_expense_kneco_external.expense_check_form"
+            />
+
+            <report 
+            id="action_purchase_journal"
+            model="report.mgc_expense_kneco_external.expense_purchase_journal"
+            string="Purchase Journal"
+            report_type="qweb-pdf"
+            name="mgc_expense_kneco_external.expense_purchase_journal"
+            file="mgc_expense_kneco_external.expense_purchase_journal_template"
+            />
+            
+            <report 
+            id="action_purchase_transaction"
+            model="report.mgc_expense_kneco_external.expense_purchase_transaction"
+            string="Purchase Transactions"
+            report_type="qweb-pdf"
+            name="mgc_expense_kneco_external.expense_purchase_transaction"
+            file="mgc_expense_kneco_external.expense_purchase_transaction_template"
+            />
+            
+            <report 
+            id="action_check_template"
+            model="report.mgc_expense_kneco_external.expense_check_template"
+            string="Check"
+            report_type="qweb-pdf"
+            name="mgc_expense_kneco_external.expense_check_template"
+            file="mgc_expense_kneco_external.expense_check_template"
+            />
+
+            <report 
+            id="action_aged_payable_template"
+            model="report.mgc_expense_kneco_external.expense_aged_payable"
+            string="Aged Payable"
+            report_type="qweb-pdf"
+            name="mgc_expense_kneco_external.expense_aged_payable"
+            file="mgc_expense_kneco_external.expense_aged_payable"
+            />
+            <report 
+            id="action_aged_payable_due_template"
+            model="report.mgc_expense_kneco_external.expense_aged_payable_due"
+            string="Aged Payable by Due"
+            report_type="qweb-pdf"
+            name="mgc_expense_kneco_external.expense_aged_payable_due"
+            file="mgc_expense_kneco_external.expense_aged_payable_due"
+            />
+            <report 
+            id="action_aged_payable_vendor_template"
+            model="report.mgc_expense_kneco_external.expense_aged_payable_vendor"
+            string="Aged Payable by Vendor"
+            report_type="qweb-pdf"
+            name="mgc_expense_kneco_external.expense_aged_payable_vendor"
+            file="mgc_expense_kneco_external.expense_aged_payable_vendor"
+            />
+
+            <report 
+            id="action_vendor_ledger_template"
+            model="report.mgc_expense_kneco_external.expense_vendor_ledger"
+            string="Vendor Ledger"
+            report_type="qweb-pdf"
+            name="mgc_expense_kneco_external.expense_vendor_ledger"
+            file="mgc_expense_kneco_external.expense_vendor_ledger"
+            />
+
+            <record id="paperformat_lowmargin" model="report.paperformat">
+                <field name="name">European Legal low margin</field>
+                <field name="default" eval="True" />
+                <field name="format">Letter</field>
+                <field name="page_height">0</field>
+                <field name="page_width">0</field>
+                <field name="orientation">Portrait</field>
+                <field name="margin_top">4</field>
+                <field name="margin_bottom">4</field>
+                <field name="margin_left">0</field>
+                <field name="margin_right">0</field>
+                <field name="header_line" eval="False" />
+                <field name="header_spacing">0</field>
+                <field name="dpi">90</field>
+            </record>
+
+            <record id="paperformat_landscape" model="report.paperformat">
+                <field name="name">European Legal low margin</field>
+                <field name="default" eval="True" />
+                <field name="format">Legal</field>
+                <field name="page_height">0</field>
+                <field name="page_width">0</field>
+                <field name="orientation">Landscape</field>
+                <field name="margin_top">4</field>
+                <field name="margin_bottom">4</field>
+                <field name="margin_left">0</field>
+                <field name="margin_right">0</field>
+                <field name="header_line" eval="False" />
+                <field name="header_spacing">0</field>
+                <field name="dpi">90</field>
+            </record>
+
+            <record id="mgc_expense_kneco_external.action_report_salesperson" model="ir.actions.report.xml">
+                <field name="paperformat_id" ref="mgc_expense_kneco_external.paperformat_lowmargin" />
+            </record>
+            <record id="mgc_expense_kneco_external.action_purchase_journal" model="ir.actions.report.xml">
+                <field name="paperformat_id" ref="mgc_expense_kneco_external.paperformat_lowmargin" />
+            </record>
+            <record id="mgc_expense_kneco_external.action_check_template" model="ir.actions.report.xml">
+                <field name="paperformat_id" ref="mgc_expense_kneco_external.paperformat_lowmargin" />
+            </record>
+            
+            <record id="mgc_expense_kneco_external.action_purchase_transaction" model="ir.actions.report.xml">
+                <field name="paperformat_id" ref="mgc_expense_kneco_external.paperformat_landscape" />
+            </record>
+            <record id="mgc_expense_kneco_external.action_aged_payable_template" model="ir.actions.report.xml">
+                <field name="paperformat_id" ref="mgc_expense_kneco_external.paperformat_landscape" />
+            </record>
+            <record id="mgc_expense_kneco_external.action_aged_payable_due_template" model="ir.actions.report.xml">
+                <field name="paperformat_id" ref="mgc_expense_kneco_external.paperformat_landscape" />
+            </record>
+            <record id="mgc_expense_kneco_external.action_aged_payable_vendor_template" model="ir.actions.report.xml">
+                <field name="paperformat_id" ref="mgc_expense_kneco_external.paperformat_landscape" />
+            </record>
+            <record id="mgc_expense_kneco_external.action_vendor_ledger_template" model="ir.actions.report.xml">
+                <field name="paperformat_id" ref="mgc_expense_kneco_external.paperformat_landscape" />
+            </record>
+    </data>
+</odoo>

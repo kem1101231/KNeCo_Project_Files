@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="0">
+        <!--Asset Group Security and User Access View -->
+        <record id="module_category_payable_and_disbursement" model="ir.module.category">
+            <field name="name">Payable and Disbursement</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <!--Employee Access-->
+        <record id="group_payable_clerk" model="res.groups">
+            <field name="name">Payable Clerk</field>
+            <field name="category_id" ref="module_category_payable_and_disbursement"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <!--Purchase Supervisory Access-->
+        <record id="group_payable_supervisor" model="res.groups">
+            <field name="name">Payable Supervisor</field>
+            <field name="category_id" ref="module_category_payable_and_disbursement"/>
+            <field name="implied_ids" eval="[(4, ref('group_payable_clerk'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="group_payable_tax_supervisor" model="res.groups">
+            <field name="name">Payable Tax Supervisor</field>
+            <field name="category_id" ref="module_category_payable_and_disbursement"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <!--Managerial Access-->
+        <record id="group_disbursement_clerk" model="res.groups">
+            <field name="name">Disbursement Clerk</field>
+            <field name="category_id" ref="module_category_payable_and_disbursement"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+        <!--Treasury Access-->
+        <record id="group_disbursement_supervisor" model="res.groups">
+            <field name="name">Disbursement Supervisor</field>
+            <field name="category_id" ref="module_category_payable_and_disbursement"/>
+            <field name="implied_ids" eval="[(4, ref('group_disbursement_clerk'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+         <record id="group_expense_admin" model="res.groups">
+            <field name="name">Expense Admin</field>
+            <field name="category_id" ref="module_category_payable_and_disbursement"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+
+    </data>
+    <data noupdate="1">
+        <!--Asset Handovers Rule-->
+<!--         <record id="account_payable_disbursement_rule" model="ir.rule">
+            <field name="name">Account Request Rule</field>
+            <field name="model_id" ref="mgc_expense_kneco_external.model_account_request"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id','child_of',[user.company_id.id])]</field>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+ -->
+
+    </data>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+            <template id="report_fleet_job_card">
+                <t t-call="report.html_container">
+                    <t t-foreach="docs" t-as="doc">
+                        <t t-call="report.external_layout">
+                            <div class="page">
+                                <h1>Job Card</h1>
+                                <p> Template content</p>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </template>
+        
+
+</odoo>
